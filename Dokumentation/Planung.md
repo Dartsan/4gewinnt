@@ -1,7 +1,11 @@
 # Planung
 ## Klassendiagramm
 In unserem Vier-Gewinnt-Spiel werden wir vermutlich folgende Klassen benötigen:
+
 Die abstrakte Klasse ***Player*** welche alle Spieler darstellen soll. Das Attribut **symbol** initialisiert das Symbol, mit welchem die Spielsteine am Spielfeld dargestellt werden, wir haben uns für die Symbole "X" und "O" entschieden. Das Attribut **wins** gibt an, wie viele Runden der Spieler bereits gewonnen hat, diese Zahl wird bei jedem Sieg um eins erhöht. Die Methode **throw_token** wird verwendet, um einen Speilstein des Spielers in das Spielfeld zu werfen. Die Methode **add_win()** erhöht die Variable **wins** bei einem Sieg des Spielers.
+
 Die Klasse **Human** leitet sich von der ***Player***-Klasse ab und ist für alle menschlichen Spieler. Dieser initialisiert seinen Namen (oder einen Username) unter dem Attribut **name**. Mit der Methode **end_game()** wird das Spiel auf Wunsch des Spielers beendet. Ansonsten besitzt die Klasse natürlich auch die vererbten Attribute und Methoden der ***Player***-Klasse.
+
 Die Klasse **Bot** leitet sich ebenfalls von der ***Player***-Klasse ab und wird für einen nicht-menschlichen (Computer-)Spieler verwendet. Diese hat vorraussichtlich außer den vererbten Attributen und Methoden der ***Player***-Klasse keine eigenen Attribute oder Methoden.
+
 Die Klasse **Field** wird verwendet um das Spielfeld zu erstellen. Diese enthält zwei bereits im Vorhinein bekannte Attribute, wobei **rows** für die Anzahl der Reihen steht (6) und **columns** für die Anzahl der Spalten am Spielfeld (7). Die Methode **show_field()** wird verwendet, um das aktuelle Spielfeld auszugeben, die Methode **clear_field()** leert das Spielfeld nach jeder abgeschlossenen Runde.
