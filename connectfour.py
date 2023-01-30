@@ -18,11 +18,11 @@ class Field:
         return board
 
     def show_field(self, board: list):
-        pass
-
+        for x in board:
+            print(x)
 
 
 if __name__ == '__main__':
-    f1 = Field.create_board(Field)
-
-    print(f1)
+    f1 = Field
+    gameboard = f1.create_board(f1)
+    f1.show_field(f1, gameboard)
