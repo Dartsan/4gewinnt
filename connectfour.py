@@ -43,7 +43,7 @@ class Human(Player):
         self.name = name
 
     def throw_token(self, gameboard: list):
-        inputstring = input("Bitte wähle eine Spalte aus, in den du deinen Stein werfen willst, indem du eine Zahl "
+        inputstring = input(f"{self.name}: Bitte wähle eine Spalte aus, in den du deinen Stein werfen willst, indem du eine Zahl "
                            "zwischen 1 und 7 wählst")
         if inputstring.isnumeric():
             column = int(inputstring)
@@ -64,11 +64,39 @@ class Human(Player):
 
 
 if __name__ == '__main__':
-    f1 = Field
-    gameboard = f1.create_board(f1)
-    f1.show_field(f1, gameboard)
-    h1 = Human("X", "Hannes")
-    h1.throw_token(gameboard)
-    f1.show_field(f1, gameboard)
-    h1.throw_token(gameboard)
-    f1.show_field(f1, gameboard)
+    # f1 = Field
+    # gameboard = f1.create_board(f1)
+    # f1.show_field(f1, gameboard)
+    # h1 = Human("X", "Hannes")
+    # h1.throw_token(gameboard)
+    # f1.show_field(f1, gameboard)
+    # h1.throw_token(gameboard)
+    # f1.show_field(f1, gameboard)
+
+    print("Willkommen bei 4 Gewinnt von Kevin Herunter und Oliver Tanzer!")
+    print("Mit Exit können Sie das Spiel jederzeit beenden!")
+    print("Bitte geben Sie an ob Sie Spieler gegen Spieler(PVP) oder Spieler gegen Computer(PVC) spielen wollen!")
+    while True:
+        gamemode = input()
+        if gamemode == "PVP":
+            pvpgame= Field
+            pvpgameboard = pvpgame.create_board(pvpgame)
+            exit = False
+            name1 = input("Geben Sie den Name des ersten Spielers an")
+            player1 = Human("X", name1)
+            name2 = input("Geben Sie den Name des zweiten Spielers an")
+            player2 = Human("O", name2)
+            while True:
+                player1.throw_token(pvpgameboard)
+                player2.throw_token(pvpgameboard)
+                print()
+                print("------------Spielfeld--------------")
+                pvpgame.show_field(pvpgame, pvpgameboard)
+                print()
+
+        elif gamemode == "PVC":
+            pass
+        elif gamemode == "Exit":
+            break
+        else:
+            print("Bitte geben Sie PVP oder PVC an")
