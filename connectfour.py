@@ -12,7 +12,6 @@ class Player:
         pass
 
 
-
 class Field:
     rows = 6
     columns = 7
@@ -27,7 +26,6 @@ class Field:
         return self.board
 
     def show_field(self, board: list):
-
         for x in board:
             print(x)
 
@@ -72,17 +70,30 @@ class Human(Player):
         self.name = name
 
     def throw_token(self, gameboard: list):
+        exit = False
         inputstring = input(
             f"{self.name}: Bitte wähle eine Spalte aus, in den du deinen Stein werfen willst, indem du eine Zahl "
             "zwischen 1 und 7 wählst")
         if inputstring.isnumeric():
             column = int(inputstring)
             while column not in range(1, 8):
-                column = int(input("Das ist leider nicht möglich. Wähle eine Zahl zwischen 1 und 7"))
-            for i in range(Field.rows - 1, -1, -1):
-                if gameboard[i][column - 1] == "-":
-                    gameboard[i][column - 1] = self.symbol
+                possiblenumber = input("Das ist leider nicht möglich. Wähle eine Zahl zwischen 1 und 7")
+                if possiblenumber.isnumeric():
+                    column = int(possiblenumber)
+                elif possiblenumber == "Exit":
+                    exit = True
                     break
+                else:
+                    continue
+            if exit:
+                return True
+            else:
+                for i in range(Field.rows - 1, -1, -1):
+                    if gameboard[i][column - 1] == "-":
+                        gameboard[i][column - 1] = self.symbol
+                        break
+        elif inputstring == "Exit":
+            return True
         else:
             self.throw_token(gameboard)
 
@@ -105,22 +116,25 @@ if __name__ == '__main__':
     print("Bitte geben Sie an ob Sie Spieler gegen Spieler(PVP) oder Spieler gegen Computer(PVC) spielen wollen!")
     while True:
         gamemode = input()
-        exit = False
+
         if gamemode == "PVP":
             pvpgame = Field
             pvpgameboard = pvpgame.create_board(pvpgame)
             name1 = input("Geben Sie den Name des ersten Spielers an")
             if name1 == "Exit":
-                exit = True
+                print("Das Spiel wurde erfolgreich beendet!")
                 break
             player1 = Human("X", name1)
             name2 = input("Geben Sie den Name des zweiten Spielers an")
             if name2 == "Exit":
-                exit = True
+                print("Das Spiel wurde erfolgreich beendet!")
                 break
             player2 = Human("O", name2)
             while True:
-                player1.throw_token(pvpgameboard)
+                if player1.throw_token(pvpgameboard):
+                    print("Das laufende Spiel wurde erfolgreich abgebrochen!")
+                    pvpgameboard.clear()
+                    break
                 print()
                 print("------------Spielfeld--------------")
                 pvpgame.show_field(pvpgame, pvpgameboard)
@@ -132,7 +146,10 @@ if __name__ == '__main__':
                     print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
                     break
 
-                player2.throw_token(pvpgameboard)
+                if player2.throw_token(pvpgameboard):
+                    print("Das laufende Spiel wurde erfolgreich abgebrochen!")
+                    pvpgameboard.clear()
+                    break
                 print()
                 print("------------Spielfeld--------------")
                 pvpgame.show_field(pvpgame, pvpgameboard)
@@ -146,7 +163,8 @@ if __name__ == '__main__':
 
         elif gamemode == "PVC":
             pass
-        elif gamemode == "Exit" or exit:
+        elif gamemode == "Exit":
+            print("Das Spiel wurde erfolgreich beendet!")
             break
         else:
             print("Bitte geben Sie PVP oder PVC an")
