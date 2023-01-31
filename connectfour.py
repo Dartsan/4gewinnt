@@ -23,9 +23,6 @@ class Field:
     board = list()
 
     def create_board(self) -> list:
-        #content = list()
-        #for i in range(self.columns):
-            #content.append("-")
         for i in range(self.rows):
             self.board.append(list())
             for j in range(self.columns):
@@ -46,13 +43,18 @@ class Human(Player):
         self.name = name
 
     def throw_token(self, gameboard: list):
-        column = int(input("Bitte wähle eine Spalte aus, in den du deinen Stein werfen willst, indem du eine Zahl zwischen 1 und 7 wählst"))
-        while column not in range(1, 8):
-            column = int(input("Das ist leider nicht möglich. Wähle eine Zahl zwischen 1 und 7"))
-        for i in range(5, -1, -1):
-            if gameboard[i][column - 1] == "-":
-                gameboard[i][column - 1] = self.symbol
-                break
+        inputstring = input("Bitte wähle eine Spalte aus, in den du deinen Stein werfen willst, indem du eine Zahl "
+                           "zwischen 1 und 7 wählst")
+        if inputstring.isnumeric():
+            column = int(inputstring)
+            while column not in range(1, 8):
+                column = int(input("Das ist leider nicht möglich. Wähle eine Zahl zwischen 1 und 7"))
+            for i in range(Field.rows-1, -1, -1):
+                if gameboard[i][column - 1] == "-":
+                    gameboard[i][column - 1] = self.symbol
+                    break
+        else:
+            self.throw_token(gameboard)
 
     def add_win(self):
         self.nr_wins += 1
