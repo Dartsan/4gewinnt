@@ -88,6 +88,10 @@ if __name__ == '__main__':
             player2 = Human("O", name2)
             while True:
                 player1.throw_token(pvpgameboard)
+                print()
+                print("------------Spielfeld--------------")
+                pvpgame.show_field(pvpgame, pvpgameboard)
+                print()
                 player2.throw_token(pvpgameboard)
                 print()
                 print("------------Spielfeld--------------")
