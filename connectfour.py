@@ -1,5 +1,4 @@
 import abc
-from colorama import Fore, Back, Style
 
 
 class Player:
@@ -30,7 +29,7 @@ class Field:
         print([str(y) for y in range(1, 8)])
         print()
         for x in board:
-            print(f"{Back.BLACK} {x} {Back.RESET}")
+            print(x)
 
     def check_win(self, gameboard: list[list[str]]) -> bool:
         win = False
@@ -75,14 +74,15 @@ class Human(Player):
     def throw_token(self, gameboard: list):
         exit = False
         inputstring = input(
-            f"{self.name}: Bitte wähle eine Spalte aus, in den du deinen Stein werfen willst, indem du eine Zahl "
-            "zwischen 1 und 7 wählst")
+            f"{self.name}: Bitte wählen Sie eine Spalte aus, in den Sie Ihren Stein werfen wollen, indem Sie eine Zahl "
+            "zwischen 1 und 7 wählen ")
         if inputstring.isnumeric():
             column = int(inputstring)
-            while column not in range(1, 8):
-                possiblenumber = input("Das ist leider nicht möglich. Wähle eine Zahl zwischen 1 und 7")
+            while (column not in range(1, 8)) or (gameboard[0][column - 1] != "-"):
+                possiblenumber = input("Das ist leider nicht möglich. Wählen Sie eine Zahl zwischen 1 und 7: ")
                 if possiblenumber.isnumeric():
-                    column = int(possiblenumber)
+                    if gameboard[0][int(possiblenumber)] == "-":
+                        column = int(possiblenumber)
                 elif possiblenumber == "Exit":
                     exit = True
                     break
@@ -95,6 +95,7 @@ class Human(Player):
                     if gameboard[i][column - 1] == "-":
                         gameboard[i][column - 1] = self.symbol
                         break
+
         elif inputstring == "Exit":
             return True
         else:
@@ -116,23 +117,23 @@ if __name__ == '__main__':
 
     print("Willkommen bei 4 Gewinnt von Kevin Herunter und Oliver Tanzer!")
     print("Mit Exit können Sie das Spiel jederzeit beenden!")
-    print("Bitte geben Sie an ob Sie Spieler gegen Spieler(PVP) oder Spieler gegen Computer(PVC) spielen wollen!")
+    print("Bitte geben Sie an, ob Sie Spieler gegen Spieler(PVP) oder Spieler gegen Computer(PVC) spielen wollen!")
     while True:
         gamemode = input()
 
         if gamemode == "PVP":
             pvpgame = Field
             pvpgameboard = pvpgame.create_board(pvpgame)
-            name1 = input("Geben Sie den Name des ersten Spielers an")
+            name1 = input("Geben Sie den Name des ersten Spielers an ")
             if name1 == "Exit":
                 print("Das Spiel wurde erfolgreich beendet!")
                 break
-            player1 = Human("X", Style.BRIGHT + name1 + Style.RESET_ALL)
-            name2 = input("Geben Sie den Name des zweiten Spielers an")
+            player1 = Human("X", name1)
+            name2 = input("Geben Sie den Name des zweiten Spielers an ")
             if name2 == "Exit":
                 print("Das Spiel wurde erfolgreich beendet!")
                 break
-            player2 = Human("O", Style.BRIGHT + name2 + Style.RESET_ALL)
+            player2 = Human("O", name2)
             print()
             print("------------Spielfeld--------------")
             pvpgame.show_field(pvpgame, pvpgameboard)
