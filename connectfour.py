@@ -1,4 +1,5 @@
 import abc
+from colorama import Fore, Back, Style
 
 
 class Player:
@@ -26,8 +27,10 @@ class Field:
         return self.board
 
     def show_field(self, board: list):
+        print([str(y) for y in range(1, 8)])
+        print()
         for x in board:
-            print(x)
+            print(f"{Back.BLACK} {x} {Back.RESET}")
 
     def check_win(self, gameboard: list[list[str]]) -> bool:
         win = False
@@ -51,14 +54,14 @@ class Field:
             for j in range(Field.columns - 3):
                 if (gameboard[x][j] != "-") and (
                         gameboard[x][j] == gameboard[x - 1][j + 1] == gameboard[x - 2][j + 2] == gameboard[x - 3][
-                    j + 3]):
+                        j + 3]):
                     win = True
         # von links oben nach rechts unten: (haut hin)
         for i in range(Field.rows - 3):
             for j in range(Field.columns - 3):
                 if (gameboard[i][j] != "-") and (
                         gameboard[i][j] == gameboard[i + 1][j + 1] == gameboard[i + 2][j + 2] == gameboard[i + 3][
-                    j + 3]):
+                        j + 3]):
                     win = True
         return win
 
@@ -124,12 +127,16 @@ if __name__ == '__main__':
             if name1 == "Exit":
                 print("Das Spiel wurde erfolgreich beendet!")
                 break
-            player1 = Human("X", name1)
+            player1 = Human("X", Style.BRIGHT + name1 + Style.RESET_ALL)
             name2 = input("Geben Sie den Name des zweiten Spielers an")
             if name2 == "Exit":
                 print("Das Spiel wurde erfolgreich beendet!")
                 break
-            player2 = Human("O", name2)
+            player2 = Human("O", Style.BRIGHT + name2 + Style.RESET_ALL)
+            print()
+            print("------------Spielfeld--------------")
+            pvpgame.show_field(pvpgame, pvpgameboard)
+            print()
             while True:
                 if player1.throw_token(pvpgameboard):
                     print("Das laufende Spiel wurde erfolgreich abgebrochen!")
