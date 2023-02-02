@@ -114,16 +114,11 @@ class Bot(Player):
         super().__init__(symbol)
         self.difficulty_level = difficulty_level
 
-    def throw_token(self, gameboard: list[list[str]]):
+    def throw_token(self, gameboard: list[list[str]], column: int):
         if self.difficulty_level == 1:
-            possible_numbers = [i for i in range(0, Field.columns)]
-            for i in possible_numbers:
-                if gameboard[0][i] != "-":
-                    possible_numbers.remove(i)
-            column = random.choice(possible_numbers)
             for i in range(Field.rows - 1, -1, -1):
-                if gameboard[i][column - 1] == "-":
-                    gameboard[i][column - 1] = self.symbol
+                if gameboard[i][column] == "-":
+                    gameboard[i][column] = self.symbol
                     break
         elif self.difficulty_level == 2:
             pass
@@ -239,6 +234,7 @@ if __name__ == '__main__':
             if player2.choose_difficulty():
                 print("Das Spiel wurde erfolgreich beendet!")
                 break
+            possible_numbers = [i for i in range(0, Field.columns)]
             while True:
                 print("------------Spielfeld--------------")
                 pvcgame.show_field(pvcgame, pvcgameboard)
@@ -248,6 +244,9 @@ if __name__ == '__main__':
                     pvcgameboard.clear()
                     break
                 if pvcgame.check_win(pvcgame, pvcgameboard) or pvcgame.check_draw(pvcgame, pvcgameboard):
+                    print("------------Spielfeld--------------")
+                    pvcgame.show_field(pvcgame, pvcgameboard)
+                    print()
                     if pvcgame.check_win(pvcgame, pvcgameboard):
                         print(f"{player1.name} hat gewonnen! ")
                     else:
@@ -257,8 +256,15 @@ if __name__ == '__main__':
                     print()
                     print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
                     break
-                player2.throw_token(pvcgameboard)
+                for i in possible_numbers:
+                    if pvcgameboard[0][i] != "-":
+                        possible_numbers.remove(i)
+                column = random.choice(possible_numbers)
+                player2.throw_token(pvcgameboard, column)
                 if pvcgame.check_win(pvcgame, pvcgameboard) or pvcgame.check_draw(pvcgame, pvcgameboard):
+                    print("------------Spielfeld--------------")
+                    pvcgame.show_field(pvcgame, pvcgameboard)
+                    print()
                     if pvcgame.check_win(pvcgame, pvcgameboard):
                         print(f"Der Computer hat gewonnen! ")
                     else:
