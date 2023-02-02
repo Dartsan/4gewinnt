@@ -1,4 +1,5 @@
 import abc
+import random
 
 
 class Player:
@@ -107,14 +108,49 @@ class Human(Player):
         else:
             self.throw_token(gameboard)
 
-    def end_game(self):
-        pass
-
 
 class Bot(Player):
     def __init__(self, symbol: str, difficulty_level: int):
         super().__init__(symbol)
         self.difficulty_level = difficulty_level
+
+    def throw_token(self, gameboard: list[list[str]]):
+        if self.difficulty_level == 1:
+            possible_numbers = [i for i in range(0, Field.columns)]
+            for i in possible_numbers:
+                if gameboard[0][i] != "-":
+                    possible_numbers.remove(i)
+            column = random.choice(possible_numbers)
+            for i in range(Field.rows - 1, -1, -1):
+                if gameboard[i][column - 1] == "-":
+                    gameboard[i][column - 1] = self.symbol
+                    break
+        elif self.difficulty_level == 2:
+            pass
+        else:
+            pass
+
+    def choose_difficulty(self):
+        difficulty = input("Geben Sie den Schwierigkeitsgrad des Computers an. "
+                           "Dieser kann zwischen 1 (sehr einfach) und 3 (schwierig) liegen: ")
+        if difficulty == "Exit":
+            print("Das Spiel wurde erfolgreich beendet!")
+            return True
+        elif difficulty.isnumeric():
+            self.difficulty_level = int(difficulty)
+            while self.difficulty_level not in range(1, 4):
+                difficulty = input("Das ist leider nicht möglich! "
+                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 3: ")
+                if difficulty.isnumeric():
+                    self.difficulty_level = int(difficulty)
+                elif difficulty == "Exit":
+                    print("Das Spiel wurde erfolgreich beendet!")
+                    return True
+                else:
+                    continue
+        else:
+            self.choose_difficulty()
+
 
 
 
@@ -192,7 +228,46 @@ if __name__ == '__main__':
                     break
 
         elif gamemode == "PVC":
-            pass
+            pvcgame = Field
+            pvcgameboard = pvcgame.create_board(pvcgame)
+            name1 = input("Geben Sie den Name des Spielers an ")
+            if name1 == "Exit":
+                print("Das Spiel wurde erfolgreich beendet!")
+                break
+            player1 = Human("X", name1)
+            player2 = Bot("O", None)
+            if player2.choose_difficulty():
+                print("Das Spiel wurde erfolgreich beendet!")
+                break
+            while True:
+                print("------------Spielfeld--------------")
+                pvcgame.show_field(pvcgame, pvcgameboard)
+                print()
+                if player1.throw_token(pvcgameboard):
+                    print("Das laufende Spiel wurde erfolgreich abgebrochen!")
+                    pvcgameboard.clear()
+                    break
+                if pvcgame.check_win(pvcgame, pvcgameboard) or pvcgame.check_draw(pvcgame, pvcgameboard):
+                    if pvcgame.check_win(pvcgame, pvcgameboard):
+                        print(f"{player1.name} hat gewonnen! ")
+                    else:
+                        print("Es sind alle Spalten voll, es ist kein Zug mehr möglich!")
+                        print("Das Spiel endet Unentschieden!")
+                    pvcgameboard.clear()
+                    print()
+                    print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
+                    break
+                player2.throw_token(pvcgameboard)
+                if pvcgame.check_win(pvcgame, pvcgameboard) or pvcgame.check_draw(pvcgame, pvcgameboard):
+                    if pvcgame.check_win(pvcgame, pvcgameboard):
+                        print(f"Der Computer hat gewonnen! ")
+                    else:
+                        print("Es sind alle Spalten voll, es ist kein Zug mehr möglich!")
+                        print("Das Spiel endet Unentschieden!")
+                    pvcgameboard.clear()
+                    print()
+                    print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
+                    break
         elif gamemode == "Exit":
             print("Das Spiel wurde erfolgreich beendet!")
             break
