@@ -2,7 +2,6 @@ import abc
 
 
 class Player:
-    win = False
 
     def __init__(self, symbol: str):
         self.symbol = symbol
@@ -64,30 +63,37 @@ class Field:
                     win = True
         return win
 
+    def check_draw(self, gameboard: list[list[str]]) -> bool:
+        draw = False
+        if "-" not in gameboard[0]:
+            draw = True
+        return draw
+
 
 class Human(Player):
     def __init__(self, symbol: str, name: str):
         super().__init__(symbol)
-        super().win
         self.name = name
 
     def throw_token(self, gameboard: list):
         exit = False
         inputstring = input(
             f"{self.name}: Bitte wählen Sie eine Spalte aus, in den Sie Ihren Stein werfen wollen, indem Sie eine Zahl "
-            "zwischen 1 und 7 wählen ")
+            "zwischen 1 und 7 wählen: ")
         if inputstring.isnumeric():
             column = int(inputstring)
-            while (column not in range(1, 8)) or (gameboard[0][column - 1] != "-"):
+            while column not in range(1, 8):
                 possiblenumber = input("Das ist leider nicht möglich. Wählen Sie eine Zahl zwischen 1 und 7: ")
                 if possiblenumber.isnumeric():
-                    if gameboard[0][int(possiblenumber)] == "-":
-                        column = int(possiblenumber)
+                    column = int(possiblenumber)
                 elif possiblenumber == "Exit":
                     exit = True
                     break
                 else:
                     continue
+            if gameboard[0][column - 1] != "-":
+                print("Diese Spalte ist voll! Wähle eine andere Spalte!")
+                self.throw_token(gameboard)
             if exit:
                 return True
             else:
@@ -103,6 +109,15 @@ class Human(Player):
 
     def end_game(self):
         pass
+
+
+class Bot(Player):
+    def __init__(self, symbol: str, difficulty_level: int):
+        super().__init__(symbol)
+        self.difficulty_level = difficulty_level
+
+
+
 
 
 if __name__ == '__main__':
@@ -147,13 +162,16 @@ if __name__ == '__main__':
                 print("------------Spielfeld--------------")
                 pvpgame.show_field(pvpgame, pvpgameboard)
                 print()
-                if pvpgame.check_win(pvpgame, pvpgameboard):
+                if pvpgame.check_win(pvpgame, pvpgameboard) or pvpgame.check_draw(pvpgame, pvpgameboard):
+                    if pvpgame.check_win(pvpgame, pvpgameboard):
+                        print(f"{player1.name} hat gewonnen! ")
+                    else:
+                        print("Es sind alle Spalten voll, es ist kein Zug mehr möglich!")
+                        print("Das Spiel endet Unentschieden!")
                     pvpgameboard.clear()
-                    print(f"{player1.name} hat gewonnen! ")
                     print()
                     print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
                     break
-
                 if player2.throw_token(pvpgameboard):
                     print("Das laufende Spiel wurde erfolgreich abgebrochen!")
                     pvpgameboard.clear()
@@ -162,9 +180,13 @@ if __name__ == '__main__':
                 print("------------Spielfeld--------------")
                 pvpgame.show_field(pvpgame, pvpgameboard)
                 print()
-                if pvpgame.check_win(pvpgame, pvpgameboard):
+                if pvpgame.check_win(pvpgame, pvpgameboard) or pvpgame.check_draw(pvpgame, pvpgameboard):
+                    if pvpgame.check_win(pvpgame, pvpgameboard):
+                        print(f"{player2.name} hat gewonnen!")
+                    else:
+                        print("Es sind alle Spalten voll, es ist kein Zug mehr möglich!")
+                        print("Das Spiel endet Unentschieden!")
                     pvpgameboard.clear()
-                    print(f"{player2.name} hat gewonnen!")
                     print()
                     print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
                     break
