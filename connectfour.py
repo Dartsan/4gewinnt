@@ -3,21 +3,38 @@ import random
 
 
 class Player:
-
     def __init__(self, symbol: str):
+        """
+        Konstruktor der Klasse Player
+        Parameters
+        ----------
+        symbol - Spielsteinsymbols des Spielers
+        """
         self.symbol = symbol
 
     @abc.abstractmethod
     def throw_token(self, gameboard):
+        """
+        Realisierung Spielsteine zu setzen
+        Parameters
+        ----------
+        gameboard - aktuelles Spielfeld
+        """
         pass
 
 
 class Field:
     rows = 6
     columns = 7
-    board = list()
+    board = []
 
-    def create_board(self) -> list:
+    def create_board(self) -> list[[str]]:
+        """
+        Erstellung ein leeres Spielfeld mit den Symbol '-'
+        Returns
+        -------
+        leeres Spielfeld mit den Namen self.board
+        """
         for i in range(self.rows):
             self.board.append(list())
             for j in range(self.columns):
@@ -25,13 +42,30 @@ class Field:
 
         return self.board
 
-    def show_field(self, board: list):
+    def show_field(self, board: list[[str]]):
+        """
+        Zeigt das aktuelle Spielfeld an
+        Parameters
+        ----------
+        board - auszugebendes Spielfeld
+        """
         print([str(y) for y in range(1, 8)])
         print()
         for x in board:
             print(x)
 
     def check_win(self, gameboard: list[list[str]]) -> bool:
+        """
+        Überprüfung, ob ein Spieler gewonnen hat
+        Parameters
+        ----------
+        gameboard - zu überprüfendes Spielfeld
+
+        Returns
+        -------
+        win - True = Es gibt einen Gewinner
+
+        """
         win = False
         # jede Spalte überprüfen:
         for i in range(Field.rows - 1, -1, -1):
@@ -53,18 +87,28 @@ class Field:
             for j in range(Field.columns - 3):
                 if (gameboard[x][j] != "-") and (
                         gameboard[x][j] == gameboard[x - 1][j + 1] == gameboard[x - 2][j + 2] == gameboard[x - 3][
-                        j + 3]):
+                    j + 3]):
                     win = True
-        # von links oben nach rechts unten: (haut hin)
+        # von links oben nach rechts unten:
         for i in range(Field.rows - 3):
             for j in range(Field.columns - 3):
                 if (gameboard[i][j] != "-") and (
                         gameboard[i][j] == gameboard[i + 1][j + 1] == gameboard[i + 2][j + 2] == gameboard[i + 3][
-                        j + 3]):
+                    j + 3]):
                     win = True
         return win
 
     def check_draw(self, gameboard: list[list[str]]) -> bool:
+        """
+        Überprüft, ob das Spiel Unentschieden endet
+        Parameters
+        ----------
+        gameboard - zu überprüfendes Spielfeld
+
+        Returns
+        -------
+        bool draw - True = Unentschieden
+        """
         draw = False
         if "-" not in gameboard[0]:
             draw = True
@@ -73,10 +117,27 @@ class Field:
 
 class Human(Player):
     def __init__(self, symbol: str, name: str):
+        """
+        Konstruktor Klasse Human
+        Parameters
+        ----------
+        symbol - Spielsteinsymbols des Spielers
+        name - Nickname des Spielers
+        """
         super().__init__(symbol)
         self.name = name
 
-    def throw_token(self, gameboard: list):
+    def throw_token(self, gameboard: list[[str]]) -> bool:
+        """
+        Realisierung Spielzug für eine Person
+        Parameters
+        ----------
+        gameboard - aktuelles Spielfeld
+
+        Returns
+        -------
+        bool exit - True, bei Eingabe von Exit als Benutzereingabe
+        """
         exit = False
         inputstring = input(
             f"{self.name}: Bitte wählen Sie eine Spalte aus, in den Sie Ihren Stein werfen wollen, indem Sie eine Zahl "
@@ -111,10 +172,24 @@ class Human(Player):
 
 class Bot(Player):
     def __init__(self, symbol: str, difficulty_level: int):
+        """
+        Konstruktor Klasse Bot
+        Parameters
+        ----------
+        symbol - Spielsteinsymbols des Computers
+        difficulty_level - Schwierigkeitsstufe des Computers
+        """
         super().__init__(symbol)
         self.difficulty_level = difficulty_level
 
     def throw_token(self, gameboard: list[list[str]], column: int):
+        """
+        Realisierung Spielzug für den Computer
+        Parameters
+        ----------
+        gameboard - aktuelles Spielfeld
+        column - die zu spielende Spalte
+        """
         if self.difficulty_level == 1:
             for i in range(Field.rows - 1, -1, -1):
                 if gameboard[i][column] == "-":
@@ -147,20 +222,7 @@ class Bot(Player):
             self.choose_difficulty()
 
 
-
-
-
-
 if __name__ == '__main__':
-    # f1 = Field
-    # gameboard = f1.create_board(f1)
-    # f1.show_field(f1, gameboard)
-    # h1 = Human("X", "Hannes")
-    # h1.throw_token(gameboard)
-    # f1.show_field(f1, gameboard)
-    # h1.throw_token(gameboard)
-    # f1.show_field(f1, gameboard)
-
     print("Willkommen bei 4 Gewinnt von Kevin Herunter und Oliver Tanzer!")
     print("Mit Exit können Sie das Spiel jederzeit beenden!")
     print("Bitte geben Sie an, ob Sie Spieler gegen Spieler(PVP) oder Spieler gegen Computer(PVC) spielen wollen!")
