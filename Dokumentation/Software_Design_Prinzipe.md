@@ -9,7 +9,7 @@ diesen Code? Welche grundlegenden Software Design Prinzipien werden evtl. nicht 
 
 ## Problemlösung
 Ein grundlegendes Problem ergibt sich aufgrund der eher nicht so detaillierten Dokumentation. Der Source Code ist 
-ohne Dokumentation schwieriger nachvollziehen als ein Source Code mit sinnvoller Dokumentation. Dies erschwert es, wenn 
+ohne Dokumentation schwieriger nachzuvollziehen als ein Source Code mit sinnvoller Dokumentation. Dies erschwert es, wenn 
 neue EntwicklerInnen an diesem Projekt weiterarbeiten müssen, da sie viel Zeit investieren müssen, um den Source Code zu
 verstehen. Dadurch wird die Wartbarkeit der Software schwieriger und komplexer. Ein weiteres Problem ist, dass die 
 Klassen meist sehr lange sind. Dies verletzt das "Single Responsibility" Prinzip. Dies besagt, dass eine Klasse nur eine
