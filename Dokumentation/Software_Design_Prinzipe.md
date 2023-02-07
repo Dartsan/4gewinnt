@@ -1,4 +1,4 @@
-# Software Design Prinzipe
+# Software Design Prinzipien
 
 ## Aufgabenstellung
 Sie beginnen als EntwicklerIn in einem neuen Unternehmen und bekommen die Verantwortung für
