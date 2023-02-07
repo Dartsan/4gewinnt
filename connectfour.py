@@ -201,6 +201,9 @@ class Bot(Player):
             pass
 
     def choose_difficulty(self):
+        """
+        Realisierung zur Auswahl des Schwierigkeitsgrades des Computers
+        """
         difficulty = input("Geben Sie den Schwierigkeitsgrad des Computers an. "
                            "Dieser kann zwischen 1 (sehr einfach) und 3 (schwierig) liegen: ")
         if difficulty == "Exit":
@@ -228,7 +231,6 @@ if __name__ == '__main__':
     print("Bitte geben Sie an, ob Sie Spieler gegen Spieler(PVP) oder Spieler gegen Computer(PVC) spielen wollen!")
     while True:
         gamemode = input()
-
         if gamemode == "PVP":
             pvpgame = Field
             pvpgameboard = pvpgame.create_board(pvpgame)
