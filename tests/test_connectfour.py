@@ -3,7 +3,7 @@ from unittest import mock
 
 # * sollte eigentlich nicht verwendet werden, wird hier aber verwendet, da alle Klassen und Methoden getestet werden
 # sollen.
-from fourwins.connectfour import *
+from vier_gewinnt.connectfour import *
 
 
 class ConnectFourTestCase(unittest.TestCase):
