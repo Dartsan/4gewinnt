@@ -36,6 +36,12 @@ class ConnectFourTestCase(unittest.TestCase):
                            ['-', '-', '-', '-', '-', 'Y', '-'],
                            ['-', '-', '-', '-', 'Y', '-', '-'],
                            ['-', '-', '-', 'Y', '-', '-', '-']]
+        self.diagonalwin2 = [['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['Y', '-', '-', '-', '-', '-', '-'],
+                            ['-', 'Y', '-', '-', '-', '-', '-'],
+                            ['-', '-', 'Y', '-', '-', '-', '-'],
+                            ['-', '-', '-', 'Y', '-', '-', '-']]
         self.gameboard_draw = [ ['X', 'X', 'X', 'O', 'X', 'X', 'X'],
                                 ['O', 'O', 'O', 'X', 'O', 'O', 'O'],
                                 ['X', 'X', 'X', 'O', 'X', 'X', 'X'],
@@ -75,6 +81,7 @@ class ConnectFourTestCase(unittest.TestCase):
         self.assertEqual(True, Field.check_win(Field, self.verticalwin))
         self.assertEqual(True, Field.check_win(Field, self.horizontalwin))
         self.assertEqual(True, Field.check_win(Field, self.diagonalwin))
+        self.assertEqual(True, Field.check_win(Field, self.diagonalwin2))
         self.assertEqual(False, Field.check_win(Field, self.emptyboard))
         self.assertEqual(False, Field.check_win(Field, self.gameboard_draw))
 
