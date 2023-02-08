@@ -35,6 +35,7 @@ class Field:
         -------
         leeres Spielfeld mit den Namen self.board
         """
+        self.board.clear()
         for i in range(self.rows):
             self.board.append(list())
             for j in range(self.columns):
@@ -200,9 +201,12 @@ class Bot(Player):
         else:
             pass
 
-    def choose_difficulty(self):
+    def choose_difficulty(self) -> bool:
         """
         Realisierung zur Auswahl des Schwierigkeitsgrades des Computers
+        Returns
+        -------
+        boolean exit- True, wenn Exit eingegeben wird, sonst ist der return None
         """
         difficulty = input("Geben Sie den Schwierigkeitsgrad des Computers an. "
                            "Dieser kann zwischen 1 (sehr einfach) und 3 (schwierig) liegen: ")
