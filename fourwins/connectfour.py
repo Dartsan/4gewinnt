@@ -199,19 +199,42 @@ class Bot(Player):
         Parameters
         ----------
         gameboard - aktuelles Spielfeld, in das der Spielstein geworfen werden soll.
-        column - die zu spielende Spalte
         """
         for i in possible_numbers:
             if pvcgameboard[0][i] != "-":
                 possible_numbers.remove(i)
-        column = random.choice(possible_numbers)
         if self.difficulty_level == 1:
+            column = random.choice(possible_numbers)
             for i in range(Field.rows - 1, -1, -1):
                 if gameboard[i][column] == "-":
                     gameboard[i][column] = self.symbol
                     break
         elif self.difficulty_level == 2:
-            pass
+            column = None
+            # überprüfen, ob Gegner in einer Reihe fertig werden kann
+            for i in range(Field.rows - 1, -1, -1):
+                for j in range(0, Field.columns - 4):
+                    if gameboard[i][j] == "X":
+                        if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X"):
+                            if i == (Field.rows - 1):
+                                if gameboard[i][j + 3] == "-":
+                                    column = j + 3
+                            elif (gameboard[i + 1][j + 3] != "-") and (gameboard[i][j + 3] == "-"):
+                                column = j + 3
+            # wenn noch keine Reihe gefunden -> überprüfen, ob Gegner in einer Spalte fertig werden kann
+            if column == None:
+                for i in range(Field.rows - 1, Field.rows - 3, -1):
+                    for j in range(0, Field.columns):
+                        if gameboard[i][j] == "X":
+                            if (gameboard[i - 1][j] == "X") and (gameboard[i - 2][j] == "X") and (gameboard[i - 3][j] == "-"):
+                                column = j
+            if column == None:
+                column = random.choice(possible_numbers)
+            # Werfen des Steins an sich:
+            for i in range(Field.rows - 1, -1, -1):
+                if gameboard[i][column] == "-":
+                    gameboard[i][column] = self.symbol
+                    break
         else:
             pass
 
