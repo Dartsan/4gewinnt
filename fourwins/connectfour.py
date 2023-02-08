@@ -192,7 +192,7 @@ class Bot(Player):
         super().__init__(symbol)
         self.difficulty_level = difficulty_level
 
-    def throw_token(self, gameboard: list[list[str]], column: int):
+    def throw_token(self, gameboard: list[list[str]]):
         """
         Realisierung Spielzug für den Computer
 
@@ -201,6 +201,10 @@ class Bot(Player):
         gameboard - aktuelles Spielfeld, in das der Spielstein geworfen werden soll.
         column - die zu spielende Spalte
         """
+        for i in possible_numbers:
+            if pvcgameboard[0][i] != "-":
+                possible_numbers.remove(i)
+        column = random.choice(possible_numbers)
         if self.difficulty_level == 1:
             for i in range(Field.rows - 1, -1, -1):
                 if gameboard[i][column] == "-":
@@ -336,11 +340,7 @@ if __name__ == '__main__':
                     print()
                     print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
                     break
-                for i in possible_numbers:
-                    if pvcgameboard[0][i] != "-":
-                        possible_numbers.remove(i)
-                column = random.choice(possible_numbers)
-                player2.throw_token(pvcgameboard, column)
+                player2.throw_token(pvcgameboard)
                 if pvcgame.check_win(pvcgame, pvcgameboard) or pvcgame.check_draw(pvcgame, pvcgameboard):
                     print("------------Spielfeld--------------")
                     pvcgame.show_field(pvcgame, pvcgameboard)
