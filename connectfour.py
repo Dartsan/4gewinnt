@@ -147,10 +147,6 @@ class Bot(Player):
             self.choose_difficulty()
 
 
-
-
-
-
 if __name__ == '__main__':
     # f1 = Field
     # gameboard = f1.create_board(f1)
