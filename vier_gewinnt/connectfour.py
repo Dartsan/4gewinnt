@@ -204,7 +204,6 @@ class Bot(Player):
         for i in possible_numbers:
             if gameboard[0][i] != "-":
                 possible_numbers.remove(i)
-        print(possible_numbers)
         if self.difficulty_level == 1:
             column = random.choice(possible_numbers)
             for i in range(Field.rows - 1, -1, -1):
