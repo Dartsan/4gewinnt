@@ -200,9 +200,11 @@ class Bot(Player):
         ----------
         gameboard - aktuelles Spielfeld, in das der Spielstein geworfen werden soll.
         """
+        possible_numbers = [i for i in range(0, Field.columns)]
         for i in possible_numbers:
-            if pvcgameboard[0][i] != "-":
+            if gameboard[0][i] != "-":
                 possible_numbers.remove(i)
+        print(possible_numbers)
         if self.difficulty_level == 1:
             column = random.choice(possible_numbers)
             for i in range(Field.rows - 1, -1, -1):
@@ -297,6 +299,32 @@ class Bot(Player):
                                     elif (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
                                         column = j - 1
                                         print(column)
+            if (self.difficulty_level >= 4) and (column == None):
+                # Einbeziehen des Falles der aufgespaltenen Reihe, die fertig werden könnte
+                for i in range(Field.rows):
+                    for j in range(Field.columns - 3):
+                        if gameboard[i][j] == "X":
+                            if i == Field.rows - 1:
+                                if (gameboard[i][j + 1] == "X") and \
+                                        (gameboard[i][j + 2] == "-") and (gameboard[i][j + 3] == "X"):
+                                    column = j + 2
+                                    print(column)
+                                elif (gameboard[i][j + 1] == "-") and \
+                                        (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
+                                    column = j + 1
+                                    print(column)
+                            else:
+                                if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "-") and \
+                                        (gameboard[i + 1][j + 2] != "-") and (gameboard[i][j + 3] == "X"):
+                                    column = j + 2
+                                    print(column)
+                                elif (gameboard[i][j + 1] == "-") and (gameboard[i + 1][j + 1] != "-") and \
+                                        (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
+                                    column = j + 1
+                                    print(column)
+            if (self.difficulty_level >= 5) and (column == None):
+                # Einbeziehen des Falles der aufgespaltenen Diagonalen, die fertig werden könnte
+                pass
             if column == None:
                 column = random.choice(possible_numbers)
             # Werfen des Steins an sich:
@@ -317,15 +345,15 @@ class Bot(Player):
                         des Spiels zu ermöglichen
         """
         difficulty = input("Geben Sie den Schwierigkeitsgrad des Computers an. "
-                           "Dieser kann zwischen 1 (sehr einfach) und 3 (schwierig) liegen: ")
+                           "Dieser kann zwischen 1 (sehr einfach) und 4 (schwierig) liegen: ")
         if difficulty == "Exit":
             print("Das Spiel wurde erfolgreich beendet!")
             return True
         elif difficulty.isnumeric():
             self.difficulty_level = int(difficulty)
-            while self.difficulty_level not in range(1, 4):
+            while self.difficulty_level not in range(1, 5):
                 difficulty = input("Das ist leider nicht möglich! "
-                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 3: ")
+                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 4: ")
                 if difficulty.isnumeric():
                     self.difficulty_level = int(difficulty)
                 elif difficulty == "Exit":
@@ -410,7 +438,6 @@ if __name__ == '__main__':
             if player2.choose_difficulty():
                 print("Das Spiel wurde erfolgreich beendet!")
                 break
-            possible_numbers = [i for i in range(0, Field.columns)]
             while True:
                 print("------------Spielfeld--------------")
                 pvcgame.show_field(pvcgame, pvcgameboard)

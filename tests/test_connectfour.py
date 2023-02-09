@@ -24,12 +24,48 @@ class ConnectFourTestCase(unittest.TestCase):
                            ['-', '-', '-', '-', '-', '-', '-'],
                            ['-', '-', '-', '-', '-', '-', '-'],
                            ['X', 'X', 'X', 'X', '-', '-', '-']]
+        self.verticalwin2 = [['-', '-', '-', 'O', 'O', 'O', 'O'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-']]
+        self.verticalwin3 = [['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', 'X', 'X', 'X', 'X', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-']]
+        self.verticalwin4 = [['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', '-', '-', '-', '-'],
+                            ['-', '-', '-', 'O', 'O', 'O', 'O']]
         self.horizontalwin = [['-', '-', '-', '-', '-', '-', '-'],
                            ['-', '-', '-', '-', 'O', '-', '-'],
                            ['-', '-', '-', '-', 'O', '-', '-'],
                            ['-', '-', '-', '-', 'O', '-', '-'],
                            ['-', '-', '-', '-', 'O', '-', '-'],
                            ['-', '-', '-', '-', '-', '-', '-']]
+        self.horizontalwin2 = [['-', '-', '-', '-', '-', '-', '-'],
+                              ['-', '-', '-', '-', '-', '-', '-'],
+                              ['X', '-', '-', '-', '-', '-', '-'],
+                              ['X', '-', '-', '-', '-', '-', '-'],
+                              ['X', '-', '-', '-', '-', '-', '-'],
+                              ['X', '-', '-', '-', '-', '-', '-']]
+        self.horizontalwin3 = [['-', '-', '-', '-', '-', '-', 'O'],
+                              ['-', '-', '-', '-', '-', '-', 'O'],
+                              ['-', '-', '-', '-', '-', '-', 'O'],
+                              ['-', '-', '-', '-', '-', '-', 'O'],
+                              ['-', '-', '-', '-', '-', '-', '-'],
+                              ['-', '-', '-', '-', '-', '-', '-']]
+        self.horizontalwin4 = [['-', '-', '-', '-', '-', '-', '-'],
+                              ['-', '-', '-', '-', '-', '-', '-'],
+                              ['-', '-', '-', '-', '-', '-', 'X'],
+                              ['-', '-', '-', '-', '-', '-', 'X'],
+                              ['-', '-', '-', '-', '-', '-', 'X'],
+                              ['-', '-', '-', '-', '-', '-', 'X']]
         self.diagonalwin = [['-', '-', '-', '-', '-', '-', '-'],
                            ['-', '-', '-', '-', '-', '-', '-'],
                            ['-', '-', '-', '-', '-', '-', 'Y'],
@@ -79,7 +115,13 @@ class ConnectFourTestCase(unittest.TestCase):
     def test_win_condition(self):
         """Test Gewinnermittlung"""
         self.assertEqual(True, Field.check_win(Field, self.verticalwin))
+        self.assertEqual(True, Field.check_win(Field, self.verticalwin2))
+        self.assertEqual(True, Field.check_win(Field, self.verticalwin3))
+        self.assertEqual(True, Field.check_win(Field, self.verticalwin4))
         self.assertEqual(True, Field.check_win(Field, self.horizontalwin))
+        self.assertEqual(True, Field.check_win(Field, self.horizontalwin2))
+        self.assertEqual(True, Field.check_win(Field, self.horizontalwin3))
+        self.assertEqual(True, Field.check_win(Field, self.horizontalwin4))
         self.assertEqual(True, Field.check_win(Field, self.diagonalwin))
         self.assertEqual(True, Field.check_win(Field, self.diagonalwin2))
         self.assertEqual(False, Field.check_win(Field, self.emptyboard))
@@ -118,10 +160,8 @@ class ConnectFourTestCase(unittest.TestCase):
     def test_throw_token_bot(self):
         """Test Spielzug Computer"""
         empty = Field.create_board(Field)
-        self.bot.throw_token(self.emptyboard, 3)
+        self.bot.throw_token(self.emptyboard)
         self.assertIsNot(empty, self.emptyboard)
-        self.bot.throw_token(empty,3)
-        self.assertEqual(empty, self.emptyboard)
 
     def test_choose_difficulty(self):
         original_input = mock.builtins.input
