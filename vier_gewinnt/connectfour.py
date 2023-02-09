@@ -321,8 +321,35 @@ class Bot(Player):
                                         (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
                                     column = j + 1
                                     print(column)
-            if (self.difficulty_level >= 5) and (column == None):
                 # Einbeziehen des Falles der aufgespaltenen Diagonalen, die fertig werden könnte
+                # von links unten nach rechts oben:
+                x = Field.rows
+                for i in range(Field.rows - 3):
+                    x -= 1
+                    for j in range(Field.columns - 3):
+                        if gameboard[x][j] == "X":
+                            if (gameboard[x - 1][j + 1] == "X") and (gameboard[x - 2][j + 2] == "-") and \
+                                    (gameboard[x - 1][j + 2] != "-") and (gameboard[x - 3][j + 3] == "X"):
+                                column = j + 2
+                                print(column)
+                            elif (gameboard[x - 1][j + 1] == "-") and (gameboard[x][j + 1] != "-") and \
+                                    (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "X"):
+                                column = j + 1
+                                print(column)
+                # von links oben nach rechts unten:
+                for i in range(Field.rows - 3):
+                    for j in range(Field.columns - 3):
+                        if gameboard[i][j] == "X":
+                            if (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "-") and \
+                                    (gameboard[i + 1][j + 2] != "-") and (gameboard[i + 3][j + 3] == "X"):
+                                column = j + 2
+                                print(column)
+                            elif (gameboard[i + 1][j + 1] == "-") and (gameboard[i][j + 1] != "-") and \
+                                    (gameboard[i + 2][j + 2] == "X") and (gameboard[i + 3][j + 3] == "X"):
+                                column = j + 1
+                                print(column)
+            if (self.difficulty_level >= 5) and (column == None):
+                # vorhersehen, dass nicht zwei Gewinnmöglichkeiten entstehen
                 pass
             if column == None:
                 column = random.choice(possible_numbers)
@@ -344,15 +371,15 @@ class Bot(Player):
                         des Spiels zu ermöglichen
         """
         difficulty = input("Geben Sie den Schwierigkeitsgrad des Computers an. "
-                           "Dieser kann zwischen 1 (sehr einfach) und 4 (schwierig) liegen: ")
+                           "Dieser kann zwischen 1 (sehr einfach) und 5 (schwierig) liegen: ")
         if difficulty == "Exit":
             print("Das Spiel wurde erfolgreich beendet!")
             return True
         elif difficulty.isnumeric():
             self.difficulty_level = int(difficulty)
-            while self.difficulty_level not in range(1, 5):
+            while self.difficulty_level not in range(1, 6):
                 difficulty = input("Das ist leider nicht möglich! "
-                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 4: ")
+                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 5: ")
                 if difficulty.isnumeric():
                     self.difficulty_level = int(difficulty)
                 elif difficulty == "Exit":
