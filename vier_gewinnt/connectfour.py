@@ -722,6 +722,20 @@ class Bot(Player):
                                 elif gameboard[i + 5][j + 3] != "-":
                                     possible_numbers.remove(j + 3)
                                     print(possible_numbers)
+            if (self.difficulty_level >= 7) and (column == None):
+                # auf zwei eigene Steine werfen, wenn vorhanden
+                for i in range(Field.rows - 2):
+                    for j in range(Field.columns):
+                        if (gameboard[i][j] == "-") and (gameboard[i + 1][j] == "O") and (gameboard[i + 2][j] == "O"):
+                            column = j
+                            print(column)
+                # auf einen eigenen Stein werfen, wenn vorhanden
+                if column == None:
+                    for i in range(Field.rows - 1):
+                        for j in range(Field.columns):
+                            if (gameboard[i][j] == "-") and (gameboard[i + 1][j] == "O"):
+                                column = j
+                                print(column)
             if column == None:
                 column = random.choice(possible_numbers)
             # Werfen des Steins an sich:
@@ -742,15 +756,15 @@ class Bot(Player):
                         des Spiels zu ermöglichen
         """
         difficulty = input("Geben Sie den Schwierigkeitsgrad des Computers an. "
-                           "Dieser kann zwischen 1 (sehr einfach) und 6 (schwierig) liegen: ")
+                           "Dieser kann zwischen 1 (sehr einfach) und 7 (schwierig) liegen: ")
         if difficulty == "Exit":
             print("Das Spiel wurde erfolgreich beendet!")
             return True
         elif difficulty.isnumeric():
             self.difficulty_level = int(difficulty)
-            while self.difficulty_level not in range(1, 7):
+            while self.difficulty_level not in range(1, 8):
                 difficulty = input("Das ist leider nicht möglich! "
-                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 6: ")
+                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 7: ")
                 if difficulty.isnumeric():
                     self.difficulty_level = int(difficulty)
                 elif difficulty == "Exit":
