@@ -13,7 +13,7 @@ Um zu spielen, wird die Datei **connectfour.py** ausgeführt. Danach kann man zw
 - **PVP**: Um zwei Spieler gegeneinander antreten zu lassen, wählen Sie den Spielmodus *PVP* aus (alles in Großbuchstaben)
 - **PCV**: Um gegen einen Computer zu spielen, wählen Sie den Spielmodus *PCV* aus (alles in Großbuchstaben)
 
-Um das Spiel zu verlassen, geben Sie **Exit** ein (Exit muss diesesmal und auch infolge immer mit einem großen E eingegeben werden)
+Um das Spiel zu verlassen, geben Sie **Exit** ein (Exit muss diesesmal und auch infolge immer mit einem großen E am Anfang eingegeben werden)
 
 Die Spielsteine werden mithilfe der Symbole **X** und **O** dargestellt, während ein leeres Feld mit **-** dargestellt wird.
 
@@ -30,7 +30,7 @@ Bei allen drei Möglichkeiten (Sieg, Unentschieden und *Exit*) gelangt man zurü
 
 ### PCV-Spielmodus
 Sollten Sie sich für das Spiel gegen einen Computer entschieden haben, wird am Anfang des Spiels der Name des Spielers abgefragt. Dieser kann beliebig gewählt werden. Sollte man sich noch gegen das Spiel entschieden haben, kann es mit *Exit* beendet werden.
-Nachdem der Spieler seinen Nickname gewählt hat, kann man den Schwierigkeitsgrad des Computergegners wählen. (auch hier kann das Spiel mittels *Exit* noch beendet werden) Der Schwierigkeitsgrad muss zwischen 1 und 3 liegen, wobei 1 der Schwächste und 3 der stärkste Gegner ist. Bis jetzt wurde allerdings erst der Computergegner mit der Schwierigkeitsstufe 1 realisiert.
+Nachdem der Spieler seinen Nickname gewählt hat, kann man den Schwierigkeitsgrad des Computergegners wählen. (auch hier kann das Spiel mittels *Exit* noch beendet werden) Der Schwierigkeitsgrad muss zwischen 1 und 7 liegen, wobei 1 den einfachsten Gegner darstellt und 7 den am schwersten zu besiegenden Gegner (eine genauere Beschreibung des Computergegners befindet sich im Dokumentationsordner).
 Nach der Auswahl des Schwierigkeitsgrades gelangt man zum eigentlichen Spiel:
 Zuerst wird das Spielfeld ausgegeben, es beginnt danach der menschliche Spieler.
 - Dieser wählt mittels eingabe einer Zahl zwischen 1 und 7 eine nicht volle Spalte aus. (Die Spaltennummer wird über dem Spielbrett angezeigt)
