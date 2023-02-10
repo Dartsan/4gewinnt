@@ -287,7 +287,8 @@ class Bot(Player):
                 for i in range(Field.rows - 1, Field.rows - 3, -1):
                     for j in range(0, Field.columns):
                         if gameboard[i][j] == "X":
-                            if (gameboard[i - 1][j] == "X") and (gameboard[i - 2][j] == "X") and (gameboard[i - 3][j] == "-"):
+                            if (gameboard[i - 1][j] == "X") and (gameboard[i - 2][j] == "X") and \
+                                    (gameboard[i - 3][j] == "-"):
                                 column = j
                                 print(column)
             if (self.difficulty_level >= 3) and (column == None):
@@ -371,18 +372,26 @@ class Bot(Player):
                                 if (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X"):
                                     if (i == 0) or (j == 0):
                                         if (i != Field.rows - 3) and (j != Field.columns - 3):
-                                            if (gameboard[i + 3][j + 3] == "-") and (gameboard[i + 4][j + 3] != "-"):
-                                                column = j + 3
-                                                print(column)
+                                            if (gameboard[i + 3][j + 3] == "-"):
+                                                if i == Field.rows - 4:
+                                                    column = j + 3
+                                                    print(column)
+                                                elif (gameboard[i + 4][j + 3] != "-"):
+                                                    column = j + 3
+                                                    print(column)
                                     elif (i == Field.rows - 3) or (j == Field.columns - 3):
                                         if (i != 0) and (j != 0):
                                             if (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
                                                 column = j - 1
                                                 print(column)
                                     else:
-                                        if (gameboard[i + 3][j + 3] == "-") and (gameboard[i + 4][j + 3] != "-"):
-                                            column = j + 3
-                                            print(column)
+                                        if (gameboard[i + 3][j + 3] == "-"):
+                                            if i == Field.rows - 4:
+                                                column = j + 3
+                                                print(column)
+                                            elif gameboard[i + 4][j + 3] != "-":
+                                                column = j + 3
+                                                print(column)
                                         elif (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
                                             column = j - 1
                                             print(column)
@@ -499,6 +508,18 @@ class Bot(Player):
                             elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-"):
                                 column = j
                                 print(column)
+                # zwei Steine getrennt voneinander in einer Reihe:
+                for i in range(Field.rows):
+                    for j in range(Field.columns - 4):
+                        if (gameboard[i][j] == "-") and (gameboard[i][j + 1] == "O") and \
+                                (gameboard[i][j + 2] == "-") and (gameboard[i][j + 3] == "O") and \
+                                (gameboard[i][j + 4] == "-"):
+                            if i == Field.rows - 1:
+                                column = j + 2
+                                print(column)
+                            elif gameboard[i + 1][j + 2] != "-":
+                                column = j + 2
+                                print(column)
                 # zwei Steine nebeneinander in einer Diagonalen:
                 # von links unten nach rechts oben:
                 x = Field.rows
@@ -531,13 +552,25 @@ class Bot(Player):
                     # zwei Steine nebeneinander in einer Reihe:
                     for i in range(Field.rows):
                         for j in range(Field.columns - 3):
-                            if (gameboard[i][j] == "-") and (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X") \
-                                    and (gameboard[i][j + 3] == "-"):
+                            if (gameboard[i][j] == "-") and (gameboard[i][j + 1] == "X") and \
+                                    (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "-"):
                                 if i == Field.rows - 1:
                                     column = j
                                     print(column)
                                 elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-"):
                                     column = j
+                                    print(column)
+                    # zwei Steine getrennt voneinander in einer Reihe:
+                    for i in range(Field.rows):
+                        for j in range(Field.columns - 4):
+                            if (gameboard[i][j] == "-") and (gameboard[i][j + 1] == "X") and \
+                                    (gameboard[i][j + 2] == "-") and (gameboard[i][j + 3] == "X") and \
+                                    (gameboard[i][j + 4] == "-"):
+                                if i == Field.rows - 1:
+                                    column = j + 2
+                                    print(column)
+                                elif gameboard[i + 1][j + 2] != "-":
+                                    column = j + 2
                                     print(column)
                     # zwei Steine nebeneinander in einer Diagonalen:
                     # von links unten nach rechts oben:
@@ -566,6 +599,129 @@ class Bot(Player):
                                 elif gameboard[i + 4][j + 3] != "-":
                                     column = j
                                     print(column)
+            if (self.difficulty_level >= 6) and (column == None):
+                # den Sieg für den Gegner nicht unabsichtlich ermöglichen
+                # Reihe:
+                for i in range(Field.rows - 1):
+                    for j in range(Field.columns - 3):
+                        if (gameboard[i + 1][j] == "-") and (gameboard[i][j + 1] == "X") and \
+                                (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
+                            if i == Field.rows - 2:
+                                possible_numbers.remove(j)
+                                print(possible_numbers)
+                            elif gameboard[i + 2][j] != "-":
+                                possible_numbers.remove(j)
+                                print(possible_numbers)
+                        if (gameboard[i][j] == "X") and (gameboard[i + 1][j + 1] == "-") and \
+                                (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
+                            if i == Field.rows - 2:
+                                possible_numbers.remove(j + 1)
+                                print(possible_numbers)
+                            elif gameboard[i + 2][j + 1] != "-":
+                                possible_numbers.remove(j + 1)
+                                print(possible_numbers)
+                        if (gameboard[i][j] == "X") and (gameboard[i][j + 1] == "X") and\
+                                (gameboard[i + 1][j + 2] == "-") and (gameboard[i][j + 3] == "X"):
+                            if i == Field.rows - 2:
+                                possible_numbers.remove(j + 2)
+                                print(possible_numbers)
+                            elif gameboard[i + 2][j + 2] != "-":
+                                possible_numbers.remove(j + 2)
+                                print(possible_numbers)
+                        if (gameboard[i][j] == "X") and (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X") \
+                                and (gameboard[i + 1][j + 3] == "-"):
+                            if i == Field.rows - 2:
+                                possible_numbers.remove(j + 3)
+                                print(possible_numbers)
+                            elif gameboard[i + 2][j + 3] != "-":
+                                possible_numbers.remove(j + 3)
+                                print(possible_numbers)
+                # Diagonale:
+                # von links unten nach rechts oben:
+                x = Field.rows
+                for i in range(Field.rows - 3):
+                    x -= 1
+                    for j in range(Field.columns - 3):
+                        if x == Field.rows - 1:
+                            if (gameboard[x][j] == "X") and (gameboard[x][j + 1] == "-") and \
+                                    (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "X"):
+                                possible_numbers.remove(j + 1)
+                                print(possible_numbers)
+                            if (gameboard[x][j] == "X") and (gameboard[x - 1][j + 1] == "X") and \
+                                    (gameboard[x - 1][j + 2] == "-") and (gameboard[x][j + 2] != "-") and \
+                                    (gameboard[x - 3][j + 3] == "X"):
+                                possible_numbers.remove(j + 2)
+                                print(possible_numbers)
+                            if (gameboard[x][j] == "X") and (gameboard[x - 1][j + 1] == "X") and \
+                                    (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 2][j + 3] == "-") and \
+                                    (gameboard[x - 1][j + 3] != "-"):
+                                possible_numbers.remove(j + 3)
+                                print(possible_numbers)
+                        else:
+                            if (gameboard[x + 1][j] == "-") and (gameboard[x - 1][j + 1] == "X") and \
+                                    (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "X"):
+                                if x == Field.rows - 2:
+                                    possible_numbers.remove(j)
+                                    print(possible_numbers)
+                                elif gameboard[x + 2][j] != "-":
+                                    possible_numbers.remove(j)
+                                    print(possible_numbers)
+                            if (gameboard[x][j] == "X") and (gameboard[x][j + 1] == "-") and \
+                                    (gameboard[x + 1][j + 1] != "-") and (gameboard[x - 2][j + 2] == "X") and \
+                                    (gameboard[x - 3][j + 3] == "X"):
+                                possible_numbers.remove(j + 1)
+                                print(possible_numbers)
+                            if (gameboard[x][j] == "X") and (gameboard[x - 1][j + 1] == "X") and \
+                                    (gameboard[x - 1][j + 2] == "-") and (gameboard[x][j + 2] != "-") and \
+                                    (gameboard[x - 3][j + 3] == "X"):
+                                possible_numbers.remove(j + 2)
+                                print(possible_numbers)
+                            if (gameboard[x][j] == "X") and (gameboard[x - 1][j + 1] == "X") and \
+                                    (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 2][j + 3] == "-") and \
+                                    (gameboard[x - 1][j + 3] != "-"):
+                                possible_numbers.remove(j + 3)
+                                print(possible_numbers)
+                # von links oben nach rechts unten:
+                for i in range(Field.rows - 3):
+                    for j in range(Field.columns - 3):
+                        if i == Field.rows - 4:
+                            if (gameboard[i + 1][j] == "-") and (gameboard[i + 2][j] != "-") and \
+                                    (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X") and \
+                                    (gameboard[i + 3][j + 3] == "X"):
+                                possible_numbers.remove(j)
+                                print(possible_numbers)
+                            if (gameboard[i][j] == "X") and (gameboard[i + 2][j + 1] == "-") and \
+                                    (gameboard[i + 3][j + 1] != "-") and (gameboard[i + 2][j + 2] == "X") and \
+                                    (gameboard[i + 3][j + 3] == "X"):
+                                possible_numbers.remove(j + 1)
+                                print(possible_numbers)
+                            if (gameboard[i][j] == "X") and (gameboard[i + 1][j + 1] == "X") and \
+                                    (gameboard[i + 3][j + 2] == "-") and (gameboard[i + 3][j + 3] == "X"):
+                                possible_numbers.remove(j + 2)
+                                print(possible_numbers)
+                        else:
+                            if (gameboard[i + 1][j] == "-") and (gameboard[i + 2][j] != "-") and \
+                                    (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X") and \
+                                    (gameboard[i + 3][j + 3] == "X"):
+                                possible_numbers.remove(j)
+                                print(possible_numbers)
+                            if (gameboard[i][j] == "X") and (gameboard[i + 2][j + 1] == "-") and \
+                                    (gameboard[i + 3][j + 1] != "-") and (gameboard[i + 2][j + 2] == "X") and \
+                                    (gameboard[i + 3][j + 3] == "X"):
+                                possible_numbers.remove(j + 1)
+                                print(possible_numbers)
+                            if (gameboard[i][j] == "X") and (gameboard[i + 1][j + 1] == "X") and \
+                                    (gameboard[i + 3][j + 2] == "-") and (gameboard[i + 4][j + 2] != "-") and \
+                                    (gameboard[i + 3][j + 3] == "X"):
+                                possible_numbers.remove(j + 2)
+                                print(possible_numbers)
+                            if (gameboard[i][j] == "X") and (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X") and (gameboard[i + 4][j + 3] == "-"):
+                                if i == Field.rows - 5:
+                                    possible_numbers.remove(j + 3)
+                                    print(possible_numbers)
+                                elif gameboard[i + 5][j + 3] != "-":
+                                    possible_numbers.remove(j + 3)
+                                    print(possible_numbers)
             if column == None:
                 column = random.choice(possible_numbers)
             # Werfen des Steins an sich:
@@ -586,15 +742,15 @@ class Bot(Player):
                         des Spiels zu ermöglichen
         """
         difficulty = input("Geben Sie den Schwierigkeitsgrad des Computers an. "
-                           "Dieser kann zwischen 1 (sehr einfach) und 5 (schwierig) liegen: ")
+                           "Dieser kann zwischen 1 (sehr einfach) und 6 (schwierig) liegen: ")
         if difficulty == "Exit":
             print("Das Spiel wurde erfolgreich beendet!")
             return True
         elif difficulty.isnumeric():
             self.difficulty_level = int(difficulty)
-            while self.difficulty_level not in range(1, 6):
+            while self.difficulty_level not in range(1, 7):
                 difficulty = input("Das ist leider nicht möglich! "
-                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 5: ")
+                                   "Bitte wählen Sie eine Schwierigkeit zwischen 1 und 6: ")
                 if difficulty.isnumeric():
                     self.difficulty_level = int(difficulty)
                 elif difficulty == "Exit":
