@@ -2,57 +2,72 @@ import abc
 import random
 
 
-class Player:
+class Player(abc.ABC):
     def __init__(self, symbol: str):
         """
-        Konstruktor der Klasse Player
+        Konstruktor der abstrakten Klasse Player
 
         Parameters
         ----------
-        symbol - Spielsteinsymbols des Spielers
+        symbol: str
+            Spielsteinsymbol des Spielers
         """
         self.symbol = symbol
 
     @abc.abstractmethod
-    def throw_token(self, gameboard):
+    def throw_token(self, gameboard: list[list]):
         """
-        Realisierung Spielsteine zu setzen
+        Realisierung, Spielsteine zu setzen
 
         Parameters
         ----------
-        gameboard - aktuelles Spielfeld
+        gameboard: list[list]
+            aktuelles Spielfeld, mit dem gespielt wird
         """
         pass
 
 
 class Field:
+    """
+    Diese Klasse stellt das Spielfeld dar
+
+    Attributes
+    ----------
+    rows: int
+        Anzahl der Reihen, die das Spielfeld besitzt (festgelegt auf 6)
+    columns: int
+        Anzahl der Spalten, die das Spielfeld besitzt (festgelegt auf 7)
+    board: list
+        leere Liste, mithilfe der das Spielfeld erstellt wird
+    """
     rows = 6
     columns = 7
     board = []
 
-    def create_board(self) -> list[[str]]:
+    def create_board(self) -> list[list[str]]:
         """
-        Erstellung ein leeres Spielfeld mit dem Symbol '-'
+        Erstellung ein leeres Spielfeld mit dem Symbol '-' als Platzhalter
 
         Returns
         -------
-        leeres Spielfeld mit den Namen self.board
+        list of lists of str
+            leeres Spielfeld mit den Namen board
         """
         self.board.clear()
         for i in range(self.rows):
             self.board.append(list())
             for j in range(self.columns):
                 self.board[i].append("-")
-
         return self.board
 
-    def show_field(self, board: list[[str]]):
+    def show_field(self, board: list[list[str]]):
         """
         Zeigt das aktuelle Spielfeld an
 
         Parameters
         ----------
-        board - auszugebendes Spielfeld
+        board: list[list[str]]
+            auszugebendes Spielfeld
         """
         print([str(y) for y in range(1, 8)])
         print()
@@ -65,11 +80,13 @@ class Field:
 
         Parameters
         ----------
-        gameboard - zu überprüfendes Spielfeld
+        gameboard: list[list[str]]
+            zu überprüfendes Spielfeld
 
         Returns
         -------
-        win - True = Es gibt einen Gewinner, die aktuelle Runde ist zu Ende
+        win: bool
+            bei True: es gibt einen Gewinner, die aktuelle Runde ist zu Ende
         """
         win = False
         # jede Spalte überprüfen:
@@ -109,11 +126,13 @@ class Field:
 
         Parameters
         ----------
-        gameboard - zu überprüfendes Spielfeld
+        gameboard: list[list[str]]
+            zu überprüfendes Spielfeld
 
         Returns
         -------
-        bool draw - True = Unentschieden, das Spiel ist zu Ende
+        draw: bool
+            bei True: Unentschieden, das Spiel ist zu Ende
         """
         draw = False
         if "-" not in gameboard[0]:
@@ -128,24 +147,28 @@ class Human(Player):
 
         Parameters
         ----------
-        symbol - Spielsteinsymbol des Spielers
-        name - Nickname des Spielers
+        symbol: str
+            Spielsteinsymbol des Spielers
+        name: str
+            Nickname des Spielers
         """
         super().__init__(symbol)
         self.name = name
 
-    def throw_token(self, gameboard: list[[str]]) -> bool:
+    def throw_token(self, gameboard: list[list[str]]) -> bool:
         """
         Realisierung Spielzug für eine Person
 
         Parameters
         ----------
-        gameboard - aktuelles Spielfeld, in welches der Stein geworfen werden soll
+        gameboard: list[list[str]]
+            aktuelles Spielfeld, in welches der Stein geworfen werden soll
 
         Returns
         -------
-        bool exit - True, bei Eingabe von Exit als Benutzereingabe, um das Verlassen des Spiels
-                    nach jedem Spielzug zu ermöglichen
+        exit: bool
+            liefert True bei der Eingabe von "Exit" zurück, um das Verlassen des Spiels nach jedem Spielzug zu
+            ermöglichen
         """
         exit = False
         inputstring = input(
@@ -186,8 +209,10 @@ class Bot(Player):
 
         Parameters
         ----------
-        symbol - Spielsteinsymbols des Computers
-        difficulty_level - Schwierigkeitsstufe des Computers
+        symbol: str
+            Spielsteinsymbols des Computers
+        difficulty_level: int
+            Schwierigkeitsstufe des Computers, kann die Werte 1-7 annehmen
         """
         super().__init__(symbol)
         self.difficulty_level = difficulty_level
@@ -198,7 +223,8 @@ class Bot(Player):
 
         Parameters
         ----------
-        gameboard - aktuelles Spielfeld, in das der Spielstein geworfen werden soll.
+        gameboard: list[list[str]]
+            aktuelles Spielfeld, in das der Spielstein geworfen werden soll
         """
         possible_numbers = [i for i in range(0, Field.columns)]
         for i in possible_numbers:
@@ -210,7 +236,9 @@ class Bot(Player):
                 if gameboard[i][column] == "-":
                     gameboard[i][column] = self.symbol
                     break
-        elif self.difficulty_level >= 2:
+        # ab hier beginnt der Computer, seine Züge nicht mehr ganz zufällig zu wählen,
+        # eine genaue Beschreibung des Computergegners befindet sich im Dokumentationsordner
+        else:
             column = None
             # überprüfen, ob Computer in einer Reihe fertig werden kann
             for i in range(Field.rows - 1, -1, -1):
@@ -221,27 +249,21 @@ class Bot(Player):
                                 if i == (Field.rows - 1):
                                     if gameboard[i][j - 1] == "-":
                                         column = j - 1
-                                        print(column)
                                 elif (gameboard[i + 1][j - 1] != "-") and (gameboard[i][j - 1] == "-"):
                                     column = j - 1
-                                    print(column)
                     elif gameboard[i][j] == "O":
                         if (gameboard[i][j + 1] == "O") and (gameboard[i][j + 2] == "O"):
                             if i == (Field.rows - 1):
                                 if gameboard[i][j + 3] == "-":
                                     column = j + 3
-                                    print(column)
                                 elif j > 0:
                                     if gameboard[i][j - 1] == "-":
                                         column = j - 1
-                                        print(column)
                             elif (gameboard[i + 1][j + 3] != "-") and (gameboard[i][j + 3] == "-"):
                                 column = j + 3
-                                print(column)
                             elif j != 0:
                                 if (gameboard[i + 1][j - 1] != "-") and (gameboard[i][j - 1] == "-"):
                                     column = j - 1
-                                    print(column)
             # überprüfen, ob Computer in einer Spalte fertig werden kann (wenn nicht in einer Reihe möglich)
             if column == None:
                 for i in range(Field.rows - 1, Field.rows - 3, -1):
@@ -250,7 +272,6 @@ class Bot(Player):
                             if (gameboard[i - 1][j] == "O") and (gameboard[i - 2][j] == "O") and \
                                     (gameboard[i - 3][j] == "-"):
                                 column = j
-                                print(column)
             # überprüfen, ob Gegner in einer Reihe fertig werden kann, wenn Computer nicht selbst fertig wird
             if column == None:
                 for i in range(Field.rows - 1, -1, -1):
@@ -261,27 +282,21 @@ class Bot(Player):
                                     if i == (Field.rows - 1):
                                         if gameboard[i][j - 1] == "-":
                                             column = j - 1
-                                            print(column)
                                     elif (gameboard[i + 1][j - 1] != "-") and (gameboard[i][j - 1] == "-"):
                                         column = j - 1
-                                        print(column)
                         elif gameboard[i][j] == "X":
                             if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X"):
                                 if i == (Field.rows - 1):
                                     if gameboard[i][j + 3] == "-":
                                         column = j + 3
-                                        print(column)
                                     elif j > 0:
                                         if gameboard[i][j - 1] == "-":
                                             column = j - 1
-                                            print(column)
                                 elif (gameboard[i + 1][j + 3] != "-") and (gameboard[i][j + 3] == "-"):
                                     column = j + 3
-                                    print(column)
                                 elif j != 0:
                                     if (gameboard[i + 1][j - 1] != "-") and (gameboard[i][j - 1] == "-"):
                                         column = j - 1
-                                        print(column)
             # wenn noch keine Reihe gefunden -> überprüfen, ob Gegner in einer Spalte fertig werden kann
             if column == None:
                 for i in range(Field.rows - 1, Field.rows - 3, -1):
@@ -290,7 +305,6 @@ class Bot(Player):
                             if (gameboard[i - 1][j] == "X") and (gameboard[i - 2][j] == "X") and \
                                     (gameboard[i - 3][j] == "-"):
                                 column = j
-                                print(column)
             if (self.difficulty_level >= 3) and (column == None):
                 # überprüfen, ob Computer über Diagonale fertig werden kann
                 # von links unten nach rechts oben:
@@ -304,19 +318,15 @@ class Bot(Player):
                                     if (x != Field.rows - 4) and (j != Field.columns - 3):
                                         if (gameboard[x - 3][j + 3] == "-") and (gameboard[x - 2][j + 3] != "-"):
                                             column = j + 3
-                                            print(column)
                                 elif (x == Field.rows - 4) or (j == Field.columns - 3):
                                     if (x != Field.rows - 1) and (j != 0):
                                         if (gameboard[x + 1][j - 1] == "-") and (gameboard[x + 2][j - 1] != "-"):
                                             column = j - 1
-                                            print(column)
                                 else:
                                     if (gameboard[x - 3][j + 3] == "-") and (gameboard[x - 2][j + 3] != "-"):
                                         column = j + 3
-                                        print(column)
                                     elif (gameboard[x + 1][j - 1] == "-") and (gameboard[x + 2][j - 1] != "-"):
                                         column = j - 1
-                                        print(column)
                 # von links oben nach rechts unten:
                 for i in range(Field.rows - 2):
                     for j in range(Field.columns - 2):
@@ -326,19 +336,15 @@ class Bot(Player):
                                     if (i != Field.rows - 3) and (j != Field.columns - 3):
                                         if (gameboard[i + 3][j + 3] == "-") and (gameboard[i + 4][j + 3] != "-"):
                                             column = j + 3
-                                            print(column)
                                 elif (i == Field.rows - 3) or (j == Field.columns - 3):
                                     if (i != 0) and (j != 0):
                                         if (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
                                             column = j - 1
-                                            print(column)
                                 else:
                                     if (gameboard[i + 3][j + 3] == "-") and (gameboard[i + 4][j + 3] != "-"):
                                         column = j + 3
-                                        print(column)
                                     elif (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
                                         column = j - 1
-                                        print(column)
                 # überprüfen, ob Gegner über Diagonale fertig werden kann:
                 # von links unten nach rechts oben:
                 if column == None:
@@ -352,19 +358,15 @@ class Bot(Player):
                                         if (x != Field.rows - 4) and (j != Field.columns - 3):
                                             if (gameboard[x - 3][j + 3] == "-") and (gameboard[x - 2][j + 3] != "-"):
                                                 column = j + 3
-                                                print(column)
                                     elif (x == Field.rows - 4) or (j == Field.columns - 3):
                                         if (x != Field.rows - 1) and (j != 0):
                                             if (gameboard[x + 1][j - 1] == "-") and (gameboard[x + 2][j - 1] != "-"):
                                                 column = j - 1
-                                                print(column)
                                     else:
                                         if (gameboard[x - 3][j + 3] == "-") and (gameboard[x - 2][j + 3] != "-"):
                                             column = j + 3
-                                            print(column)
                                         elif (gameboard[x + 1][j - 1] == "-") and (gameboard[x + 2][j - 1] != "-"):
                                             column = j - 1
-                                            print(column)
                     # von links oben nach rechts unten:
                     for i in range(Field.rows - 2):
                         for j in range(Field.columns - 2):
@@ -375,26 +377,20 @@ class Bot(Player):
                                             if (gameboard[i + 3][j + 3] == "-"):
                                                 if i == Field.rows - 4:
                                                     column = j + 3
-                                                    print(column)
                                                 elif (gameboard[i + 4][j + 3] != "-"):
                                                     column = j + 3
-                                                    print(column)
                                     elif (i == Field.rows - 3) or (j == Field.columns - 3):
                                         if (i != 0) and (j != 0):
                                             if (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
                                                 column = j - 1
-                                                print(column)
                                     else:
                                         if (gameboard[i + 3][j + 3] == "-"):
                                             if i == Field.rows - 4:
                                                 column = j + 3
-                                                print(column)
                                             elif gameboard[i + 4][j + 3] != "-":
                                                 column = j + 3
-                                                print(column)
                                         elif (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
                                             column = j - 1
-                                            print(column)
             if (self.difficulty_level >= 4) and (column == None):
                 # Einbeziehen des Falles der aufgespaltenen Reihe, in der der Computer fertig werden kann
                 for i in range(Field.rows):
@@ -404,20 +400,16 @@ class Bot(Player):
                                 if (gameboard[i][j + 1] == "O") and \
                                         (gameboard[i][j + 2] == "-") and (gameboard[i][j + 3] == "O"):
                                     column = j + 2
-                                    print(column)
                                 elif (gameboard[i][j + 1] == "-") and \
                                         (gameboard[i][j + 2] == "O") and (gameboard[i][j + 3] == "O"):
                                     column = j + 1
-                                    print(column)
                             else:
                                 if (gameboard[i][j + 1] == "O") and (gameboard[i][j + 2] == "-") and \
                                         (gameboard[i + 1][j + 2] != "-") and (gameboard[i][j + 3] == "O"):
                                     column = j + 2
-                                    print(column)
                                 elif (gameboard[i][j + 1] == "-") and (gameboard[i + 1][j + 1] != "-") and \
                                         (gameboard[i][j + 2] == "O") and (gameboard[i][j + 3] == "O"):
                                     column = j + 1
-                                    print(column)
                 # Einbeziehen des Falles der aufgespaltenen Diagonalen, in der der Computer fertig werden kann,
                 # von links unten nach rechts oben:
                 x = Field.rows
@@ -428,11 +420,9 @@ class Bot(Player):
                             if (gameboard[x - 1][j + 1] == "O") and (gameboard[x - 2][j + 2] == "-") and \
                                     (gameboard[x - 1][j + 2] != "-") and (gameboard[x - 3][j + 3] == "O"):
                                 column = j + 2
-                                print(column)
                             elif (gameboard[x - 1][j + 1] == "-") and (gameboard[x][j + 1] != "-") and \
                                     (gameboard[x - 2][j + 2] == "O") and (gameboard[x - 3][j + 3] == "O"):
                                 column = j + 1
-                                print(column)
                 # von links oben nach rechts unten:
                 for i in range(Field.rows - 3):
                     for j in range(Field.columns - 3):
@@ -440,11 +430,9 @@ class Bot(Player):
                             if (gameboard[i + 1][j + 1] == "O") and (gameboard[i + 2][j + 2] == "-") and \
                                     (gameboard[i + 1][j + 2] != "-") and (gameboard[i + 3][j + 3] == "O"):
                                 column = j + 2
-                                print(column)
                             elif (gameboard[i + 1][j + 1] == "-") and (gameboard[i][j + 1] != "-") and \
                                     (gameboard[i + 2][j + 2] == "O") and (gameboard[i + 3][j + 3] == "O"):
                                 column = j + 1
-                                print(column)
                 if column == None:
                     # Einbeziehen des Falles der aufgespaltenen Reihe, in der der Gegner fertig werden kann
                     for i in range(Field.rows):
@@ -454,20 +442,16 @@ class Bot(Player):
                                     if (gameboard[i][j + 1] == "X") and \
                                             (gameboard[i][j + 2] == "-") and (gameboard[i][j + 3] == "X"):
                                         column = j + 2
-                                        print(column)
                                     elif (gameboard[i][j + 1] == "-") and \
                                             (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
                                         column = j + 1
-                                        print(column)
                                 else:
                                     if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "-") and \
                                             (gameboard[i + 1][j + 2] != "-") and (gameboard[i][j + 3] == "X"):
                                         column = j + 2
-                                        print(column)
                                     elif (gameboard[i][j + 1] == "-") and (gameboard[i + 1][j + 1] != "-") and \
                                             (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
                                         column = j + 1
-                                        print(column)
                     # Einbeziehen des Falles der aufgespaltenen Diagonalen, in der der Gegner fertig werden kann,
                     # von links unten nach rechts oben:
                     x = Field.rows
@@ -478,11 +462,9 @@ class Bot(Player):
                                 if (gameboard[x - 1][j + 1] == "X") and (gameboard[x - 2][j + 2] == "-") and \
                                         (gameboard[x - 1][j + 2] != "-") and (gameboard[x - 3][j + 3] == "X"):
                                     column = j + 2
-                                    print(column)
                                 elif (gameboard[x - 1][j + 1] == "-") and (gameboard[x][j + 1] != "-") and \
                                         (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "X"):
                                     column = j + 1
-                                    print(column)
                     # von links oben nach rechts unten:
                     for i in range(Field.rows - 3):
                         for j in range(Field.columns - 3):
@@ -490,11 +472,9 @@ class Bot(Player):
                                 if (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "-") and \
                                         (gameboard[i + 1][j + 2] != "-") and (gameboard[i + 3][j + 3] == "X"):
                                     column = j + 2
-                                    print(column)
                                 elif (gameboard[i + 1][j + 1] == "-") and (gameboard[i][j + 1] != "-") and \
                                         (gameboard[i + 2][j + 2] == "X") and (gameboard[i + 3][j + 3] == "X"):
                                     column = j + 1
-                                    print(column)
             if (self.difficulty_level >= 5) and (column == None):
                 # zwei Gewinnmöglichkeiten für Computer erschaffen
                 # zwei Steine nebeneinander in einer Reihe:
@@ -504,10 +484,8 @@ class Bot(Player):
                                 and (gameboard[i][j + 3] == "-"):
                             if i == Field.rows - 1:
                                 column = j
-                                print(column)
                             elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-"):
                                 column = j
-                                print(column)
                 # zwei Steine getrennt voneinander in einer Reihe:
                 for i in range(Field.rows):
                     for j in range(Field.columns - 4):
@@ -516,10 +494,8 @@ class Bot(Player):
                                 (gameboard[i][j + 4] == "-"):
                             if i == Field.rows - 1:
                                 column = j + 2
-                                print(column)
                             elif gameboard[i + 1][j + 2] != "-":
                                 column = j + 2
-                                print(column)
                 # zwei Steine nebeneinander in einer Diagonalen:
                 # von links unten nach rechts oben:
                 x = Field.rows
@@ -531,10 +507,8 @@ class Bot(Player):
                                 (gameboard[x - 2][j + 3] != "-"):
                             if x == Field.rows - 1:
                                 column = j
-                                print(column)
                             elif gameboard[x + 1][j] != "-":
                                 column = j
-                                print(column)
                 # von links oben nach rechts unten:
                 for i in range(Field.rows - 4):
                     for j in range(Field.columns - 4):
@@ -543,10 +517,8 @@ class Bot(Player):
                                 (gameboard[i + 3][j + 3] == "-"):
                             if i == Field.columns - 4:
                                 column = j
-                                print(column)
                             elif gameboard[i + 4][j + 3] != "-":
                                 column = j
-                                print(column)
                 if column == None:
                     # vorhersehen, dass nicht zwei Gewinnmöglichkeiten für Gegner entstehen
                     # zwei Steine nebeneinander in einer Reihe:
@@ -556,10 +528,8 @@ class Bot(Player):
                                     (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "-"):
                                 if i == Field.rows - 1:
                                     column = j
-                                    print(column)
                                 elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-"):
                                     column = j
-                                    print(column)
                     # zwei Steine getrennt voneinander in einer Reihe:
                     for i in range(Field.rows):
                         for j in range(Field.columns - 4):
@@ -568,10 +538,8 @@ class Bot(Player):
                                     (gameboard[i][j + 4] == "-"):
                                 if i == Field.rows - 1:
                                     column = j + 2
-                                    print(column)
                                 elif gameboard[i + 1][j + 2] != "-":
                                     column = j + 2
-                                    print(column)
                     # zwei Steine nebeneinander in einer Diagonalen:
                     # von links unten nach rechts oben:
                     x = Field.rows
@@ -583,10 +551,8 @@ class Bot(Player):
                                     (gameboard[x - 2][j + 3] != "-"):
                                 if x == Field.rows - 1:
                                     column = j
-                                    print(column)
                                 elif gameboard[x + 1][j] != "-":
                                     column = j
-                                    print(column)
                     # von links oben nach rechts unten:
                     for i in range(Field.rows - 4):
                         for j in range(Field.columns - 4):
@@ -595,10 +561,8 @@ class Bot(Player):
                                     (gameboard[i + 3][j + 3] == "-"):
                                 if i == Field.columns - 4:
                                     column = j
-                                    print(column)
                                 elif gameboard[i + 4][j + 3] != "-":
                                     column = j
-                                    print(column)
             if (self.difficulty_level >= 6) and (column == None):
                 # den Sieg für den Gegner nicht unabsichtlich ermöglichen
                 # Reihe:
@@ -608,34 +572,26 @@ class Bot(Player):
                                 (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
                             if i == Field.rows - 2:
                                 possible_numbers.remove(j)
-                                print(possible_numbers)
                             elif gameboard[i + 2][j] != "-":
                                 possible_numbers.remove(j)
-                                print(possible_numbers)
                         if (gameboard[i][j] == "X") and (gameboard[i + 1][j + 1] == "-") and \
                                 (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
                             if i == Field.rows - 2:
                                 possible_numbers.remove(j + 1)
-                                print(possible_numbers)
                             elif gameboard[i + 2][j + 1] != "-":
                                 possible_numbers.remove(j + 1)
-                                print(possible_numbers)
                         if (gameboard[i][j] == "X") and (gameboard[i][j + 1] == "X") and\
                                 (gameboard[i + 1][j + 2] == "-") and (gameboard[i][j + 3] == "X"):
                             if i == Field.rows - 2:
                                 possible_numbers.remove(j + 2)
-                                print(possible_numbers)
                             elif gameboard[i + 2][j + 2] != "-":
                                 possible_numbers.remove(j + 2)
-                                print(possible_numbers)
                         if (gameboard[i][j] == "X") and (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X") \
                                 and (gameboard[i + 1][j + 3] == "-"):
                             if i == Field.rows - 2:
                                 possible_numbers.remove(j + 3)
-                                print(possible_numbers)
                             elif gameboard[i + 2][j + 3] != "-":
                                 possible_numbers.remove(j + 3)
-                                print(possible_numbers)
                 # Diagonale:
                 # von links unten nach rechts oben:
                 x = Field.rows
@@ -646,41 +602,33 @@ class Bot(Player):
                             if (gameboard[x][j] == "X") and (gameboard[x][j + 1] == "-") and \
                                     (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "X"):
                                 possible_numbers.remove(j + 1)
-                                print(possible_numbers)
                             if (gameboard[x][j] == "X") and (gameboard[x - 1][j + 1] == "X") and \
                                     (gameboard[x - 1][j + 2] == "-") and (gameboard[x][j + 2] != "-") and \
                                     (gameboard[x - 3][j + 3] == "X"):
                                 possible_numbers.remove(j + 2)
-                                print(possible_numbers)
                             if (gameboard[x][j] == "X") and (gameboard[x - 1][j + 1] == "X") and \
                                     (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 2][j + 3] == "-") and \
                                     (gameboard[x - 1][j + 3] != "-"):
                                 possible_numbers.remove(j + 3)
-                                print(possible_numbers)
                         else:
                             if (gameboard[x + 1][j] == "-") and (gameboard[x - 1][j + 1] == "X") and \
                                     (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "X"):
                                 if x == Field.rows - 2:
                                     possible_numbers.remove(j)
-                                    print(possible_numbers)
                                 elif gameboard[x + 2][j] != "-":
                                     possible_numbers.remove(j)
-                                    print(possible_numbers)
                             if (gameboard[x][j] == "X") and (gameboard[x][j + 1] == "-") and \
                                     (gameboard[x + 1][j + 1] != "-") and (gameboard[x - 2][j + 2] == "X") and \
                                     (gameboard[x - 3][j + 3] == "X"):
                                 possible_numbers.remove(j + 1)
-                                print(possible_numbers)
                             if (gameboard[x][j] == "X") and (gameboard[x - 1][j + 1] == "X") and \
                                     (gameboard[x - 1][j + 2] == "-") and (gameboard[x][j + 2] != "-") and \
                                     (gameboard[x - 3][j + 3] == "X"):
                                 possible_numbers.remove(j + 2)
-                                print(possible_numbers)
                             if (gameboard[x][j] == "X") and (gameboard[x - 1][j + 1] == "X") and \
                                     (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 2][j + 3] == "-") and \
                                     (gameboard[x - 1][j + 3] != "-"):
                                 possible_numbers.remove(j + 3)
-                                print(possible_numbers)
                 # von links oben nach rechts unten:
                 for i in range(Field.rows - 3):
                     for j in range(Field.columns - 3):
@@ -689,53 +637,43 @@ class Bot(Player):
                                     (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X") and \
                                     (gameboard[i + 3][j + 3] == "X"):
                                 possible_numbers.remove(j)
-                                print(possible_numbers)
                             if (gameboard[i][j] == "X") and (gameboard[i + 2][j + 1] == "-") and \
                                     (gameboard[i + 3][j + 1] != "-") and (gameboard[i + 2][j + 2] == "X") and \
                                     (gameboard[i + 3][j + 3] == "X"):
                                 possible_numbers.remove(j + 1)
-                                print(possible_numbers)
                             if (gameboard[i][j] == "X") and (gameboard[i + 1][j + 1] == "X") and \
                                     (gameboard[i + 3][j + 2] == "-") and (gameboard[i + 3][j + 3] == "X"):
                                 possible_numbers.remove(j + 2)
-                                print(possible_numbers)
                         else:
                             if (gameboard[i + 1][j] == "-") and (gameboard[i + 2][j] != "-") and \
                                     (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X") and \
                                     (gameboard[i + 3][j + 3] == "X"):
                                 possible_numbers.remove(j)
-                                print(possible_numbers)
                             if (gameboard[i][j] == "X") and (gameboard[i + 2][j + 1] == "-") and \
                                     (gameboard[i + 3][j + 1] != "-") and (gameboard[i + 2][j + 2] == "X") and \
                                     (gameboard[i + 3][j + 3] == "X"):
                                 possible_numbers.remove(j + 1)
-                                print(possible_numbers)
                             if (gameboard[i][j] == "X") and (gameboard[i + 1][j + 1] == "X") and \
                                     (gameboard[i + 3][j + 2] == "-") and (gameboard[i + 4][j + 2] != "-") and \
                                     (gameboard[i + 3][j + 3] == "X"):
                                 possible_numbers.remove(j + 2)
-                                print(possible_numbers)
                             if (gameboard[i][j] == "X") and (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X") and (gameboard[i + 4][j + 3] == "-"):
                                 if i == Field.rows - 5:
                                     possible_numbers.remove(j + 3)
-                                    print(possible_numbers)
                                 elif gameboard[i + 5][j + 3] != "-":
                                     possible_numbers.remove(j + 3)
-                                    print(possible_numbers)
             if (self.difficulty_level >= 7) and (column == None):
                 # auf zwei eigene Steine werfen, wenn vorhanden
                 for i in range(Field.rows - 2):
                     for j in range(Field.columns):
                         if (gameboard[i][j] == "-") and (gameboard[i + 1][j] == "O") and (gameboard[i + 2][j] == "O"):
                             column = j
-                            print(column)
                 # auf einen eigenen Stein werfen, wenn vorhanden
                 if column == None:
                     for i in range(Field.rows - 1):
                         for j in range(Field.columns):
                             if (gameboard[i][j] == "-") and (gameboard[i + 1][j] == "O"):
                                 column = j
-                                print(column)
             if column == None:
                 column = random.choice(possible_numbers)
             # Werfen des Steins an sich:
@@ -743,8 +681,6 @@ class Bot(Player):
                 if gameboard[i][column] == "-":
                     gameboard[i][column] = self.symbol
                     break
-        else:
-            pass
 
     def choose_difficulty(self) -> bool:
         """
@@ -752,8 +688,9 @@ class Bot(Player):
 
         Returns
         -------
-        boolean exit- True, wenn Exit eingegeben wird, sonst ist der return None, um das Verlassen
-                        des Spiels zu ermöglichen
+        bool/None
+            liefert True bei der Eingabe von "Exit" zurück, um das Verlassen des Spiels nach jedem Spielzug zu
+            ermöglichen, ansonsten ist der Return None
         """
         difficulty = input("Geben Sie den Schwierigkeitsgrad des Computers an. "
                            "Dieser kann zwischen 1 (sehr einfach) und 7 (schwierig) liegen: ")
@@ -836,7 +773,6 @@ if __name__ == '__main__':
                     print()
                     print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
                     break
-
         elif gamemode == "PVC":
             pvcgame = Field
             pvcgameboard = pvcgame.create_board(pvcgame)
