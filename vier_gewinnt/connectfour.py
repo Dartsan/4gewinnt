@@ -212,12 +212,12 @@ class Bot(Player):
                     break
         elif self.difficulty_level >= 2:
             column = None
-            # überprüfen, ob Gegner in einer Reihe fertig werden kann
+            # überprüfen, ob Computer in einer Reihe fertig werden kann
             for i in range(Field.rows - 1, -1, -1):
                 for j in range(0, Field.columns - 2):
                     if j == (Field.columns - 3):
-                        if gameboard[i][j] == "X":
-                            if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X"):
+                        if gameboard[i][j] == "O":
+                            if (gameboard[i][j + 1] == "O") and (gameboard[i][j + 2] == "O"):
                                 if i == (Field.rows - 1):
                                     if gameboard[i][j - 1] == "-":
                                         column = j - 1
@@ -225,8 +225,8 @@ class Bot(Player):
                                 elif (gameboard[i + 1][j - 1] != "-") and (gameboard[i][j - 1] == "-"):
                                     column = j - 1
                                     print(column)
-                    elif gameboard[i][j] == "X":
-                        if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X"):
+                    elif gameboard[i][j] == "O":
+                        if (gameboard[i][j + 1] == "O") and (gameboard[i][j + 2] == "O"):
                             if i == (Field.rows - 1):
                                 if gameboard[i][j + 3] == "-":
                                     column = j + 3
@@ -242,6 +242,46 @@ class Bot(Player):
                                 if (gameboard[i + 1][j - 1] != "-") and (gameboard[i][j - 1] == "-"):
                                     column = j - 1
                                     print(column)
+            # überprüfen, ob Computer in einer Spalte fertig werden kann (wenn nicht in einer Reihe möglich)
+            if column == None:
+                for i in range(Field.rows - 1, Field.rows - 3, -1):
+                    for j in range(0, Field.columns):
+                        if gameboard[i][j] == "O":
+                            if (gameboard[i - 1][j] == "O") and (gameboard[i - 2][j] == "O") and \
+                                    (gameboard[i - 3][j] == "-"):
+                                column = j
+                                print(column)
+            # überprüfen, ob Gegner in einer Reihe fertig werden kann, wenn Computer nicht selbst fertig wird
+            if column == None:
+                for i in range(Field.rows - 1, -1, -1):
+                    for j in range(0, Field.columns - 2):
+                        if j == (Field.columns - 3):
+                            if gameboard[i][j] == "X":
+                                if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X"):
+                                    if i == (Field.rows - 1):
+                                        if gameboard[i][j - 1] == "-":
+                                            column = j - 1
+                                            print(column)
+                                    elif (gameboard[i + 1][j - 1] != "-") and (gameboard[i][j - 1] == "-"):
+                                        column = j - 1
+                                        print(column)
+                        elif gameboard[i][j] == "X":
+                            if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X"):
+                                if i == (Field.rows - 1):
+                                    if gameboard[i][j + 3] == "-":
+                                        column = j + 3
+                                        print(column)
+                                    elif j > 0:
+                                        if gameboard[i][j - 1] == "-":
+                                            column = j - 1
+                                            print(column)
+                                elif (gameboard[i + 1][j + 3] != "-") and (gameboard[i][j + 3] == "-"):
+                                    column = j + 3
+                                    print(column)
+                                elif j != 0:
+                                    if (gameboard[i + 1][j - 1] != "-") and (gameboard[i][j - 1] == "-"):
+                                        column = j - 1
+                                        print(column)
             # wenn noch keine Reihe gefunden -> überprüfen, ob Gegner in einer Spalte fertig werden kann
             if column == None:
                 for i in range(Field.rows - 1, Field.rows - 3, -1):
@@ -251,14 +291,14 @@ class Bot(Player):
                                 column = j
                                 print(column)
             if (self.difficulty_level >= 3) and (column == None):
-                # überprüfen, ob Gegner über Diagonale fertig werden kann:
+                # überprüfen, ob Computer über Diagonale fertig werden kann
                 # von links unten nach rechts oben:
                 x = Field.rows
                 for i in range(Field.rows - 2):
                     x -= 1
                     for j in range(Field.columns - 2):
-                        if gameboard[x][j] == "X":
-                            if (gameboard[x - 1][j + 1] == "X") and (gameboard[x - 2][j + 2] == "X"):
+                        if gameboard[x][j] == "O":
+                            if (gameboard[x - 1][j + 1] == "O") and (gameboard[x - 2][j + 2] == "O"):
                                 if (x == Field.rows - 1) or (j == 0):
                                     if (x != Field.rows - 4) and (j != Field.columns - 3):
                                         if (gameboard[x - 3][j + 3] == "-") and (gameboard[x - 2][j + 3] != "-"):
@@ -279,8 +319,8 @@ class Bot(Player):
                 # von links oben nach rechts unten:
                 for i in range(Field.rows - 2):
                     for j in range(Field.columns - 2):
-                        if gameboard[i][j] == "X":
-                            if (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X"):
+                        if gameboard[i][j] == "O":
+                            if (gameboard[i + 1][j + 1] == "O") and (gameboard[i + 2][j + 2] == "O"):
                                 if (i == 0) or (j == 0):
                                     if (i != Field.rows - 3) and (j != Field.columns - 3):
                                         if (gameboard[i + 3][j + 3] == "-") and (gameboard[i + 4][j + 3] != "-"):
@@ -298,59 +338,234 @@ class Bot(Player):
                                     elif (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
                                         column = j - 1
                                         print(column)
+                # überprüfen, ob Gegner über Diagonale fertig werden kann:
+                # von links unten nach rechts oben:
+                if column == None:
+                    x = Field.rows
+                    for i in range(Field.rows - 2):
+                        x -= 1
+                        for j in range(Field.columns - 2):
+                            if gameboard[x][j] == "X":
+                                if (gameboard[x - 1][j + 1] == "X") and (gameboard[x - 2][j + 2] == "X"):
+                                    if (x == Field.rows - 1) or (j == 0):
+                                        if (x != Field.rows - 4) and (j != Field.columns - 3):
+                                            if (gameboard[x - 3][j + 3] == "-") and (gameboard[x - 2][j + 3] != "-"):
+                                                column = j + 3
+                                                print(column)
+                                    elif (x == Field.rows - 4) or (j == Field.columns - 3):
+                                        if (x != Field.rows - 1) and (j != 0):
+                                            if (gameboard[x + 1][j - 1] == "-") and (gameboard[x + 2][j - 1] != "-"):
+                                                column = j - 1
+                                                print(column)
+                                    else:
+                                        if (gameboard[x - 3][j + 3] == "-") and (gameboard[x - 2][j + 3] != "-"):
+                                            column = j + 3
+                                            print(column)
+                                        elif (gameboard[x + 1][j - 1] == "-") and (gameboard[x + 2][j - 1] != "-"):
+                                            column = j - 1
+                                            print(column)
+                    # von links oben nach rechts unten:
+                    for i in range(Field.rows - 2):
+                        for j in range(Field.columns - 2):
+                            if gameboard[i][j] == "X":
+                                if (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X"):
+                                    if (i == 0) or (j == 0):
+                                        if (i != Field.rows - 3) and (j != Field.columns - 3):
+                                            if (gameboard[i + 3][j + 3] == "-") and (gameboard[i + 4][j + 3] != "-"):
+                                                column = j + 3
+                                                print(column)
+                                    elif (i == Field.rows - 3) or (j == Field.columns - 3):
+                                        if (i != 0) and (j != 0):
+                                            if (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
+                                                column = j - 1
+                                                print(column)
+                                    else:
+                                        if (gameboard[i + 3][j + 3] == "-") and (gameboard[i + 4][j + 3] != "-"):
+                                            column = j + 3
+                                            print(column)
+                                        elif (gameboard[i - 1][j - 1] == "-") and (gameboard[i][j - 1] != "-"):
+                                            column = j - 1
+                                            print(column)
             if (self.difficulty_level >= 4) and (column == None):
-                # Einbeziehen des Falles der aufgespaltenen Reihe, die fertig werden könnte
+                # Einbeziehen des Falles der aufgespaltenen Reihe, in der der Computer fertig werden kann
                 for i in range(Field.rows):
                     for j in range(Field.columns - 3):
-                        if gameboard[i][j] == "X":
+                        if gameboard[i][j] == "O":
                             if i == Field.rows - 1:
-                                if (gameboard[i][j + 1] == "X") and \
-                                        (gameboard[i][j + 2] == "-") and (gameboard[i][j + 3] == "X"):
+                                if (gameboard[i][j + 1] == "O") and \
+                                        (gameboard[i][j + 2] == "-") and (gameboard[i][j + 3] == "O"):
                                     column = j + 2
                                     print(column)
                                 elif (gameboard[i][j + 1] == "-") and \
-                                        (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
+                                        (gameboard[i][j + 2] == "O") and (gameboard[i][j + 3] == "O"):
                                     column = j + 1
                                     print(column)
                             else:
-                                if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "-") and \
-                                        (gameboard[i + 1][j + 2] != "-") and (gameboard[i][j + 3] == "X"):
+                                if (gameboard[i][j + 1] == "O") and (gameboard[i][j + 2] == "-") and \
+                                        (gameboard[i + 1][j + 2] != "-") and (gameboard[i][j + 3] == "O"):
                                     column = j + 2
                                     print(column)
                                 elif (gameboard[i][j + 1] == "-") and (gameboard[i + 1][j + 1] != "-") and \
-                                        (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
+                                        (gameboard[i][j + 2] == "O") and (gameboard[i][j + 3] == "O"):
                                     column = j + 1
                                     print(column)
-                # Einbeziehen des Falles der aufgespaltenen Diagonalen, die fertig werden könnte
+                # Einbeziehen des Falles der aufgespaltenen Diagonalen, in der der Computer fertig werden kann,
                 # von links unten nach rechts oben:
                 x = Field.rows
                 for i in range(Field.rows - 3):
                     x -= 1
                     for j in range(Field.columns - 3):
-                        if gameboard[x][j] == "X":
-                            if (gameboard[x - 1][j + 1] == "X") and (gameboard[x - 2][j + 2] == "-") and \
-                                    (gameboard[x - 1][j + 2] != "-") and (gameboard[x - 3][j + 3] == "X"):
+                        if gameboard[x][j] == "O":
+                            if (gameboard[x - 1][j + 1] == "O") and (gameboard[x - 2][j + 2] == "-") and \
+                                    (gameboard[x - 1][j + 2] != "-") and (gameboard[x - 3][j + 3] == "O"):
                                 column = j + 2
                                 print(column)
                             elif (gameboard[x - 1][j + 1] == "-") and (gameboard[x][j + 1] != "-") and \
-                                    (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "X"):
+                                    (gameboard[x - 2][j + 2] == "O") and (gameboard[x - 3][j + 3] == "O"):
                                 column = j + 1
                                 print(column)
                 # von links oben nach rechts unten:
                 for i in range(Field.rows - 3):
                     for j in range(Field.columns - 3):
-                        if gameboard[i][j] == "X":
-                            if (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "-") and \
-                                    (gameboard[i + 1][j + 2] != "-") and (gameboard[i + 3][j + 3] == "X"):
+                        if gameboard[i][j] == "O":
+                            if (gameboard[i + 1][j + 1] == "O") and (gameboard[i + 2][j + 2] == "-") and \
+                                    (gameboard[i + 1][j + 2] != "-") and (gameboard[i + 3][j + 3] == "O"):
                                 column = j + 2
                                 print(column)
                             elif (gameboard[i + 1][j + 1] == "-") and (gameboard[i][j + 1] != "-") and \
-                                    (gameboard[i + 2][j + 2] == "X") and (gameboard[i + 3][j + 3] == "X"):
+                                    (gameboard[i + 2][j + 2] == "O") and (gameboard[i + 3][j + 3] == "O"):
                                 column = j + 1
                                 print(column)
+                if column == None:
+                    # Einbeziehen des Falles der aufgespaltenen Reihe, in der der Gegner fertig werden kann
+                    for i in range(Field.rows):
+                        for j in range(Field.columns - 3):
+                            if gameboard[i][j] == "X":
+                                if i == Field.rows - 1:
+                                    if (gameboard[i][j + 1] == "X") and \
+                                            (gameboard[i][j + 2] == "-") and (gameboard[i][j + 3] == "X"):
+                                        column = j + 2
+                                        print(column)
+                                    elif (gameboard[i][j + 1] == "-") and \
+                                            (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
+                                        column = j + 1
+                                        print(column)
+                                else:
+                                    if (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "-") and \
+                                            (gameboard[i + 1][j + 2] != "-") and (gameboard[i][j + 3] == "X"):
+                                        column = j + 2
+                                        print(column)
+                                    elif (gameboard[i][j + 1] == "-") and (gameboard[i + 1][j + 1] != "-") and \
+                                            (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "X"):
+                                        column = j + 1
+                                        print(column)
+                    # Einbeziehen des Falles der aufgespaltenen Diagonalen, in der der Gegner fertig werden kann,
+                    # von links unten nach rechts oben:
+                    x = Field.rows
+                    for i in range(Field.rows - 3):
+                        x -= 1
+                        for j in range(Field.columns - 3):
+                            if gameboard[x][j] == "X":
+                                if (gameboard[x - 1][j + 1] == "X") and (gameboard[x - 2][j + 2] == "-") and \
+                                        (gameboard[x - 1][j + 2] != "-") and (gameboard[x - 3][j + 3] == "X"):
+                                    column = j + 2
+                                    print(column)
+                                elif (gameboard[x - 1][j + 1] == "-") and (gameboard[x][j + 1] != "-") and \
+                                        (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "X"):
+                                    column = j + 1
+                                    print(column)
+                    # von links oben nach rechts unten:
+                    for i in range(Field.rows - 3):
+                        for j in range(Field.columns - 3):
+                            if gameboard[i][j] == "X":
+                                if (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "-") and \
+                                        (gameboard[i + 1][j + 2] != "-") and (gameboard[i + 3][j + 3] == "X"):
+                                    column = j + 2
+                                    print(column)
+                                elif (gameboard[i + 1][j + 1] == "-") and (gameboard[i][j + 1] != "-") and \
+                                        (gameboard[i + 2][j + 2] == "X") and (gameboard[i + 3][j + 3] == "X"):
+                                    column = j + 1
+                                    print(column)
             if (self.difficulty_level >= 5) and (column == None):
-                # vorhersehen, dass nicht zwei Gewinnmöglichkeiten entstehen
-                pass
+                # zwei Gewinnmöglichkeiten für Computer erschaffen
+                # zwei Steine nebeneinander in einer Reihe:
+                for i in range(Field.rows):
+                    for j in range(Field.columns - 3):
+                        if (gameboard[i][j] == "-") and (gameboard[i][j + 1] == "O") and (gameboard[i][j + 2] == "O") \
+                                and (gameboard[i][j + 3] == "-"):
+                            if i == Field.rows - 1:
+                                column = j
+                                print(column)
+                            elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-"):
+                                column = j
+                                print(column)
+                # zwei Steine nebeneinander in einer Diagonalen:
+                # von links unten nach rechts oben:
+                x = Field.rows
+                for i in range(Field.rows - 3):
+                    x -= 1
+                    for j in range(Field.columns - 3):
+                        if (gameboard[x][j] == "-") and (gameboard[x - 1][j + 1] == "O") and \
+                                (gameboard[x - 2][j + 2] == "O") and (gameboard[x - 3][j + 3] == "-") and \
+                                (gameboard[x - 2][j + 3] != "-"):
+                            if x == Field.rows - 1:
+                                column = j
+                                print(column)
+                            elif gameboard[x + 1][j] != "-":
+                                column = j
+                                print(column)
+                # von links oben nach rechts unten:
+                for i in range(Field.rows - 4):
+                    for j in range(Field.columns - 4):
+                        if (gameboard[i][j] == "-") and (gameboard[i + 1][j] != "-") and \
+                                (gameboard[i + 1][j + 1] == "O") and (gameboard[i + 2][j + 2] == "O") and \
+                                (gameboard[i + 3][j + 3] == "-"):
+                            if i == Field.columns - 4:
+                                column = j
+                                print(column)
+                            elif gameboard[i + 4][j + 3] != "-":
+                                column = j
+                                print(column)
+                if column == None:
+                    # vorhersehen, dass nicht zwei Gewinnmöglichkeiten für Gegner entstehen
+                    # zwei Steine nebeneinander in einer Reihe:
+                    for i in range(Field.rows):
+                        for j in range(Field.columns - 3):
+                            if (gameboard[i][j] == "-") and (gameboard[i][j + 1] == "X") and (gameboard[i][j + 2] == "X") \
+                                    and (gameboard[i][j + 3] == "-"):
+                                if i == Field.rows - 1:
+                                    column = j
+                                    print(column)
+                                elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-"):
+                                    column = j
+                                    print(column)
+                    # zwei Steine nebeneinander in einer Diagonalen:
+                    # von links unten nach rechts oben:
+                    x = Field.rows
+                    for i in range(Field.rows - 3):
+                        x -= 1
+                        for j in range(Field.columns - 3):
+                            if (gameboard[x][j] == "-") and (gameboard[x - 1][j + 1] == "X") and \
+                                    (gameboard[x - 2][j + 2] == "X") and (gameboard[x - 3][j + 3] == "-") and \
+                                    (gameboard[x - 2][j + 3] != "-"):
+                                if x == Field.rows - 1:
+                                    column = j
+                                    print(column)
+                                elif gameboard[x + 1][j] != "-":
+                                    column = j
+                                    print(column)
+                    # von links oben nach rechts unten:
+                    for i in range(Field.rows - 4):
+                        for j in range(Field.columns - 4):
+                            if (gameboard[i][j] == "-") and (gameboard[i + 1][j] != "-") and \
+                                    (gameboard[i + 1][j + 1] == "X") and (gameboard[i + 2][j + 2] == "X") and \
+                                    (gameboard[i + 3][j + 3] == "-"):
+                                if i == Field.columns - 4:
+                                    column = j
+                                    print(column)
+                                elif gameboard[i + 4][j + 3] != "-":
+                                    column = j
+                                    print(column)
             if column == None:
                 column = random.choice(possible_numbers)
             # Werfen des Steins an sich:
