@@ -5,7 +5,7 @@ Da wir die Siege nicht mitzählen, wird auch die Methode **add_win()** nicht meh
 
 Aus der **Human**-Klasse wurde die **end_game()**-Methode entfernt, da diese Funktion ebenfalls direkt in der Spiellogik implementiert wurde.
 
-Bei der Klasse **Bot** wurde das Attribut **activated** entfernt, da direkt in der Spiellogik festgelegt wird, ob gegen einen Computer gespielt wird und es somit nicht nötig ist, in der Klasse zu speichern, ob dieser aktiviert ist. Das Attribut **schwierigkeitsgrad** haben wir nur unbenannt in **difficulty_level**, welches die Wert 1, 2 oder 3 annehmen kann.
+Bei der Klasse **Bot** wurde das Attribut **activated** entfernt, da direkt in der Spiellogik festgelegt wird, ob gegen einen Computer gespielt wird und es somit nicht nötig ist, in der Klasse zu speichern, ob dieser aktiviert ist. Das Attribut **schwierigkeitsgrad** haben wir nur unbenannt in **difficulty_level**, welches die Werte eins bis sieben annehmen kann.
 Wir benötigen in der **Bot**-Klasse nun die Methode **choose_difficulty()**, um den Schwierigkeitsgrad zu initialisieren.
 
 In der **Field**-Klasse sind die beiden Methoden **check_win()** und **check_draw()** hinzugekommen, um das aktive Spielfeld auf ein mögliches Ende des Spiels zu überprüfen.
