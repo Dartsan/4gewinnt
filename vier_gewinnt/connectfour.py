@@ -482,10 +482,20 @@ class Bot(Player):
                     for j in range(Field.columns - 3):
                         if (gameboard[i][j] == "-") and (gameboard[i][j + 1] == "O") and (gameboard[i][j + 2] == "O") \
                                 and (gameboard[i][j + 3] == "-"):
-                            if i == Field.rows - 1:
-                                column = j
-                            elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-"):
-                                column = j
+                            if j != 0:
+                                if gameboard[i][j - 1] == "-":
+                                    if i == Field.rows - 1:
+                                        column = j
+                                    elif (gameboard[i + 1][j - 1] != "-") and (gameboard[i + 1][j] != "-") and \
+                                            (gameboard[i + 1][j + 3] != "-"):
+                                        column = j
+                            elif j != Field.columns - 4:
+                                if gameboard[i][j + 4] == "-":
+                                    if i == Field.rows - 1:
+                                        column = j + 4
+                                    elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-") and \
+                                            (gameboard[i + 1][j + 4] != "-"):
+                                        column = j + 4
                 # zwei Steine getrennt voneinander in einer Reihe:
                 for i in range(Field.rows):
                     for j in range(Field.columns - 4):
@@ -526,10 +536,20 @@ class Bot(Player):
                         for j in range(Field.columns - 3):
                             if (gameboard[i][j] == "-") and (gameboard[i][j + 1] == "X") and \
                                     (gameboard[i][j + 2] == "X") and (gameboard[i][j + 3] == "-"):
-                                if i == Field.rows - 1:
-                                    column = j
-                                elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-"):
-                                    column = j
+                                if j != 0:
+                                    if gameboard[i][j - 1] == "-":
+                                        if i == Field.rows - 1:
+                                            column = j
+                                        elif (gameboard[i + 1][j - 1] != "-") and (gameboard[i + 1][j] != "-") and \
+                                                (gameboard[i + 1][j + 3] != "-"):
+                                            column = j
+                                elif j != Field.columns - 4:
+                                    if gameboard[i][j + 4] == "-":
+                                        if i == Field.rows - 1:
+                                            column = j + 4
+                                        elif (gameboard[i + 1][j] != "-") and (gameboard[i + 1][j + 3] != "-") and \
+                                                (gameboard[i + 1][j + 4] != "-"):
+                                            column = j + 4
                     # zwei Steine getrennt voneinander in einer Reihe:
                     for i in range(Field.rows):
                         for j in range(Field.columns - 4):
