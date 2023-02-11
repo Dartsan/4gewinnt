@@ -737,7 +737,8 @@ if __name__ == '__main__':
             pvpgame.show_field(pvpgame, pvpgameboard)
             print()
             while True:
-                if player1.throw_token(pvpgameboard):
+                if player1.throw_token(pvpgameboard):  # bei der throw_token Methode wird True bei der Eingabe von
+                    # "Exit" zurückgeliefert
                     print("Das laufende Spiel wurde erfolgreich abgebrochen!")
                     pvpgameboard.clear()
                     break
@@ -755,7 +756,7 @@ if __name__ == '__main__':
                     print()
                     print("Um erneut ein Spiel zu starten geben Sie wieder PVP oder PVC an!")
                     break
-                if player2.throw_token(pvpgameboard):
+                if player2.throw_token(pvpgameboard):  # liefert True bei Eingabe "Exit"
                     print("Das laufende Spiel wurde erfolgreich abgebrochen!")
                     pvpgameboard.clear()
                     break
@@ -782,14 +783,14 @@ if __name__ == '__main__':
                 break
             player1 = Human("X", name1)
             player2 = Bot("O", None)
-            if player2.choose_difficulty():
+            if player2.choose_difficulty():  # liefert True bei Eingabe von "Exit"
                 print("Das Spiel wurde erfolgreich beendet!")
                 break
             while True:
                 print("------------Spielfeld--------------")
                 pvcgame.show_field(pvcgame, pvcgameboard)
                 print()
-                if player1.throw_token(pvcgameboard):
+                if player1.throw_token(pvcgameboard):  # liefert True bei Eingabe von "Exit"
                     print("Das laufende Spiel wurde erfolgreich abgebrochen!")
                     pvcgameboard.clear()
                     break
