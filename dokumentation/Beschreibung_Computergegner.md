@@ -25,8 +25,9 @@ Bei Schwierigkeitsstufe 3 wird zuerst wieder überprüft, ob der Computer mit de
 Sollte es für den Computer nicht möglich sein, das Spiel über eine Diagonale zu gewinnen, wird wieder mit demselben System und in derselben Reiehnfolge überprüft, ob der Gegner über eine Diagonale gewinnen könnte. Um das zu verhindern, wird diese Spalte dann wieder unter **column** gespeichert.
 
 ## Schwierigkeitsstufe 4
-Wenn noch keine Reihe, Spalte oder Diagonale des Computers oder des Gegner zum Gewinnen gefunden wurde, wird bei Schwierigkeitsstufe 4 der Fall miteinbezogen, dass eine Reihe oder eine Diagonale auch aufgespaltet sein könnte und somit zum Sieg führen könnte. 
-Beispiel: "O" "O" "-" "O" -> der Spieler mit dem Symbol "O" könnte in diesem Fall in der dritten Spalte das Spiel gewinnen. Dasselbe könnte bei einer Diagonalen auftreten. Diese Fälle werden bei den Schwierigkeitsstufen 2 und 3 noch ignoriert, während ab Schwierigkeitsstufe 4 darauf acht genommen wird.
+Wenn noch keine Reihe, Spalte oder Diagonale des Computers oder des Gegner zum Gewinnen gefunden wurde, wird bei Schwierigkeitsstufe 4 der Fall miteinbezogen, dass eine Reihe oder eine Diagonale auch aufgespaltet sein könnte und somit zum Sieg führen könnte.
+
+Beispiel:    "O" "O" "-" "O"   -> der Spieler mit dem Symbol "O" könnte in diesem Fall in der dritten Spalte das Spiel gewinnen. Dasselbe könnte bei einer Diagonalen auftreten. Diese Fälle werden bei den Schwierigkeitsstufen 2 und 3 noch ignoriert, während ab Schwierigkeitsstufe 4 darauf acht genommen wird.
 
 Es wird hier zuerst überprüft, ob der Computer selbst über eine solche aufgespaltenen Reihe gewinnen kann, danach, ob er über eine aufgespaltene Diagonale gewinnen kann, wobei zuerst die Diagonale von links unten nach rechts oben überprüft wird und danach von links oben nach rechts unten (treffen alle drei Möglichkeiten zu: Diagonale von unten nach oben überschreibt das **column** von der aufgespaltenen Reihe - Diagonale von oben nach unten überschreibt **column** der anderen Diagonale).
 
@@ -36,10 +37,12 @@ Treffen alle drei Möglichkeiten nicht zu, wird danach mit dem gleichen Prozeder
 Bei Schwierigkeitsstufe 5 und höher, wenn zuvor noch keine passende Spalte gefunden wurde, versucht der Computer zuerst, mit diesem Zug zwei verschiedene Gewinnmöglichkeiten für den nächsten Zug zu schaffen. Er versucht also eine Ausgangslage zu schaffen, in der der Gegner den Sieg des Computers nicht mehr verhindern kann.
 
 Dazu wird als erstes das ganze Spielfeld überprüft, ob irgendwo zwei Steine nebeneinander sind, wobei auch überprüft wird, ob die Plätze links und rechts neben den beiden Steinen frei sind (und die beiden Plätze darunter nicht, um den Stein darauf werfen zu können) und auf mindestens einer Seite noch ein weiterer Platz daneben frei ist (und der Platz darunter nicht). Denn nur wenn alle diese Bedingungen erfüllt sind, können zwei Gewinnmöglichkeiten erschafft werden. Es wird dann die Spalte direkt neben den beiden Steinen, auf jener Seite auf der zwei Plätze daneben frei sind, unter **column** gespeichert.
-Beispiel: "-" "-" "O" "O" "-" -> es wird in die zweite Spalte geworfen, da dann links und rechts eine Viererreihe erzeugt werden kann.
+
+Beispiel:   "-" "-" "O" "O" "-"   -> es wird in die zweite Spalte geworfen, da dann links und rechts eine Viererreihe erzeugt werden kann.
 
 Als nächstes wird überprüft, ob sich zwei Steine des Computers mit einem Platz getrennt voneinander in einer Reihe befinden, wobei der Platz zwischen den Steinen frei ist (und der darunter nicht) und die beiden Plätze links und rechts neben den beiden Steinen frei sind (und die beiden Plätze darunter nicht). Sollte das der Fall sein, wird die Spalte zwischen den beiden Steinen unter **column** gespeichert.
-Beispiel: "-" "O" "-" "O" "-" -> es wird in die mittlere Spalte geworfen, da dann links und rechts eine Viererreihe erzeugt werden kann.
+
+Beispiel:  "-" "O" "-" "O" "-"   -> es wird in die mittlere Spalte geworfen, da dann links und rechts eine Viererreihe erzeugt werden kann.
 
 Danach wird überprüft, ob sich in den Diagonalen bereits zwei Steine des Computers nebeneinander befinden, und die beiden Plätze diagonal daneben frei sind (und die beiden Plätze jeweils darunter nicht). Ist das der Fall, wird der Stein immer links diagonal zu den beiden bereis vorhandenen Steinen geworfen (also die dazugehörige Spalte unter **column** gespeichert). Es wird wieder zuerst die Diagonale von unten nach oben und danach von oben nach unten überprüft.
 
@@ -50,9 +53,12 @@ Sollten sich dadurch keine zwei Gewinnmöglichkeiten für den Computer ergeben, 
 ## Schwierigkeitsstufe 6
 Ab dieser Schwierigkeitsstufe 6 folgen lediglich noch Optimierungen des Computergegners. Sollte der Computer durch die vorherigen Schwierigkeitsstufen noch keine optimale Spalte für seinen Stein gefunden haben, wird bei dieser Schwierigkeitsstufe darauf acht genommen, dass nicht unabsichtlich durch zufälliges Werfen des Steins der Sieg des Gegners ermöglicht wird:
 Es wird dazu das Spielfeld überprüft, ob sich ein Sieg für den Gegner ergeben könnte, wenn der Gegner auf den nächsten geworfenen Stein des Computers wirft. Alle Spalten, bei denen das der Fall ist, werden aus der Liste **possible_numbers** entfernt und werden somit nicht mehr für die Auswahl der Spalte herangezogen. Da das mit Worten möglicherweise schwer nachvollziehbar ist, hier ein Beispeil:
+
 "X" "-" "X" "X"
 "O" "-" "X" "O"
+
 Computer -> "O", Gegner -> "X"
+
 Wenn in diesem Fall in die zweite Spalte geworfen wird, wird dem Gegner der Sieg auf dem Silvertablett serviert. Um das zu verhindern wird diese Spalte aus **possible_numbers** entfernt, um auszuschließen, dass in diese Spalte geworfen wird.
 
 ## Schwierigkeitsstufe 7
