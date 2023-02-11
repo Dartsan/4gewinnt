@@ -504,7 +504,8 @@ class Bot(Player):
                                 (gameboard[i][j + 4] == "-"):
                             if i == Field.rows - 1:
                                 column = j + 2
-                            elif gameboard[i + 1][j + 2] != "-":
+                            elif (gameboard[i + 1][j + 2] != "-") and (gameboard[i + 1][j] != "-") and \
+                                    (gameboard[i + 1][j + 4] != "-"):
                                 column = j + 2
                 # zwei Steine nebeneinander in einer Diagonalen:
                 # von links unten nach rechts oben:
@@ -558,7 +559,8 @@ class Bot(Player):
                                     (gameboard[i][j + 4] == "-"):
                                 if i == Field.rows - 1:
                                     column = j + 2
-                                elif gameboard[i + 1][j + 2] != "-":
+                                elif (gameboard[i + 1][j + 2] != "-") and (gameboard[i + 1][j] != "-") and \
+                                    (gameboard[i + 1][j + 4] != "-"):
                                     column = j + 2
                     # zwei Steine nebeneinander in einer Diagonalen:
                     # von links unten nach rechts oben:
